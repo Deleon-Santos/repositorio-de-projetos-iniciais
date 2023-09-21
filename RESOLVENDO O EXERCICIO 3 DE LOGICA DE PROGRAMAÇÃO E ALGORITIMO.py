@@ -61,7 +61,6 @@ def adicional_extra():
                             '>>')
         if adicional == '0': #digitado'0'o pedido se encerre
             return contador
-
         elif adicional == '1':
             contador = contador + 10
             continue        #continue as opcoe de acompanhamento com valor(1,2,3 e 4
@@ -80,11 +79,11 @@ def adicional_extra():
 #inicio do programa principal
 print('--------------------------------------Bem-Vindo ao PetShop do Deleon ME ---------------------------------------')
 base = cachorro_peso()
-print(base)
+
 multiplicador = cachorro_pelo()
-print(multiplicador)
+
 extra = adicional_extra()
-print(extra)
+
 total=base*multiplicador+extra
 print(f"O peso do seu cachorro è R$ {base:.2f} foi multiplicado tamanho do pelo no multiplicador {multiplicador} e os adicionais somam R$ {(extra):.2f}")
 print(f"Seu gasto total foi R$ {(total):.2f}")
