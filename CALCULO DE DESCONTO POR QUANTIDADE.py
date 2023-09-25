@@ -21,7 +21,7 @@ while True:
             percentual = total_produto * 10 / 100
             total_desconto = total_produto - percentual
 
-        else:  # senao quantidades meiores que 2000, receberão o desconto maximo de 15%
+        else:  # senao quantidades meiores que 2000, receberão o desconto maximo de 15%dgdgdfgdgdf
             total_produto = valor_produto * quantidade_produto
             percentual = total_produto * 15 / 100
             total_desconto = total_produto - percentual
