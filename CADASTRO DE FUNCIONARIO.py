@@ -44,7 +44,7 @@ while True:
                                   '>>')
             sexo_cadastro = sexo_cadastro.lower()  # memtodo par tratar strings meiusculas no input
             if sexo_cadastro != 'm' and sexo_cadastro != "f":
-                print('Defina o sexo para acadstro: "f" ou "m"')
+                print('Defina o sexo para cadastro: "f" ou "m"')
                 continue
             if sexo_cadastro == 'm':
                 sexo = 'MASCULINO'
