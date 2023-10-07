@@ -1,65 +1,103 @@
-from ast import Continue
-
-# CONSTRUA UM SISTEMA DE RETIRADA DE VALORES SEMELHANTE AO CAIXA ELETRONICO,
-# FORNEÇA MECANISMOS PARA VALIDADAR LOGIN E SENHAS
-# VERIFIQUE SE HA SALDO DISPONIVEL EM CADA RETIRADA
+# CONSTRUA UM SISTEMA DE RETIRADA DE VALORES SEMELHANTE AO CAIXA ELETRONICO
+# FORNEÇA MECANISMOS PARA VALIDADAR ACESSO COM LOGIN E SENHAS
+# VERIFIQUE SE HA SALDO DISPONIVEL EM CADA RETIRADA DE ACORDO COM CADA CLIENTE
 # PERMITA QUE VISUALIZEM O SALDO
-# E AO TERMINAR APRESETE OS VALORES MOVOMENTADOS
+# E AO TERMINAR CADA OPERAÇAO APRESETE OS VALORES MOVIMENTADOS
 
+# \\*******************************Inicio****************************************
+# \\sistema de retirada de valores em caixa eletronico
 lista_saque = []
-cliente = [{"num": "1", "nome": "deleon", "senha": "1", "saldo": 20000.0},
-           {"num": "2", "nome": "fabio", "senha": "2", "saldo": 10000},
-           {"num": "3", "nome": "antonio", "senha": "3", "saldo": 50000}
-           ]
+banco_dados = [{"num": "1", "nome": "deleon", "senha": "1", "saldo": 20000.0},
+               {"num": "2", "nome": "fabio", "senha": "2", "saldo": 10000},
+               {"num": "3", "nome": "antonio", "senha": "3", "saldo": 50000}
+               ]
 
 
 # *************************Inicio da função Saldo*******************************
 def saldo_conta(saldo):
-    print(">>" * 20)
-    print("***SALDO EM CONTA CORRENTE***")
-    t = sum(lista_saque)
-    saldo -= t
-    print(f"Seu saldo em conta corrente e R${saldo:.2f}")
     print()
+    print("--" * 23)
+    print("***SALDO EM CONTA CORRENTE***")
+    soma = sum(lista_saque)  # \\ o saldo sera sempre a soma de soma de lista_saque - o saldo em "banco de dados
+    saldo -= soma
+    print(f"Seu saldo em conta corrente e R${saldo:.2f}")
+
+
+# \\Fim Saldo
 
 
 # *************************Inicio da função Saque*******************************
 def saque_conta(saldo):
-    print(">>" * 20)
+    print()
+    print("--" * 23)
     print("***SAQUE EM CONTA CORRENTE***")
     while True:
         try:
             valor_s = float(input("Digite o valor do saque>>"))
-            t = sum(lista_saque)
-            t += valor_s
+            soma = sum(
+                lista_saque)  # \\soma as retirados anteriores + o valor informado e compara com o saldo existente
+            soma += valor_s
 
-            if t <= saldo:
+            if soma <= saldo:
                 lista_saque.append(valor_s)
                 print()
                 print(f"***SAQUE AUTORIZADO R$ {valor_s:.2f}***\n" +
                       "Retire o valor no local informado")
-                break
+                break  # \\ se o valor da soma for inferior a saldo do cliente a operação e aprovada
 
             else:
                 print()
                 print("***SAQUE NÃO AUTORIZADO***\n" +
-                      'Consulte saldo em conta corrente')
-                break
+                      'Consulte saldo em conta corrente\n')
+                break  # \\se a soma for superior a operação sera negada
 
-        except ValueError:
+        except ValueError:  # \\tratamento de erros de valores não numericos
             print("Esta transação deve ser feita com numeros")
             print()
             continue
 
 
-def total(titular, saldo):
+# \\Fim Saque...
+
+
+# *************************Inicio da função sair*******************************
+def sair(titular, saldo, cartao):
+    print()
+    print("--" * 23)
+    print(f"{titular} Obrigado por ultilizar nossos serviços")
+    soma = sum(lista_saque)  # \\soma do valores da lista "lista_saques"
+    qtd = len(lista_saque)  # \\soma dos saques realizados durante a operação
+    saldo_restante = saldo - soma  # \\novo saldo apos os saques
+
+    # \\bloco com irformações das retiradas
+    print(f"\nVocê realizou o total de {qtd} saque(s) no valor total R$ {soma:.2f}")
+    print(f">>O saldo desta conta é R$ {saldo_restante:.2f}")
+    print("\nVeja o historico de saques")
+    print(lista_saque)
+
+    for cliente in banco_dados:  # \\atualiza a chave "saldo" com os valores atuais em cliente
+        if cliente["num"] == cartao:
+            cliente.update({"saldo": saldo_restante})  # \\atualização
+    lista_saque.clear()  # \\ lista a lista para não interferir em outras transações
+
+    print()
+    print("***OPERAÇÃO ENCERRADA!***")
+    print('\n*' * 3)
+
+
+# \\ Fim Sair
+
+
+# **************************Inicio do menu de tutulos***************************
+def menu(titular, saldo, cartao):
     while True:
-        print(">>" * 20)
-        print(f"\n***Ola, {titular}! Bem - Vindo a sua conta!***")
+        print()  # \\inicio do menu de operações
+        print("--" * 23)
+        print(f"***Ola, {titular}! Bem - Vindo a sua conta!***")
         menu = input(f"\nEscolha uma operação:\n" +
-                     "1-saldo\n" +
-                     "2-saque\n" +
-                     "0-sai\n" +
+                     "1-Saldo\n" +
+                     "2-Saque\n" +
+                     "0-Sar\n" +
                      ">>")
 
         if menu == "1":
@@ -68,52 +106,39 @@ def total(titular, saldo):
 
         elif menu == "2":
             saque_l = saque_conta(saldo)
-            print(saque_l)
             continue
 
         elif menu == "0":
-            print(">>" * 20)
-            print(f"\n{titular} Obrigado por ultilizar nossos serviços")
-            t = sum(lista_saque)
-            l = len(lista_saque)
-            t2 = saldo - t
-            print(f"\nVocê realizou o total de {l} saque(s) no valor total R$ {t:.2f}")
-            print(f">>O saldo desta conta é R$ {t2:.2f}")
-            print("\nVeja o historico de saques")
-            print(lista_saque)
-            print()
-            print("***OPERAÇÃO ENCERRADA!***")
+            encerrar = sair(titular, saldo, cartao)  # \\as valiaveis são mandadas com parametros sempre que necessarias
             break
+
         else:
             print("Escolha uma opção do menu")
             continue
 
 
+# \\Fim Menu...
+
+
 # *********************Inicio do Programa Principal*****************************
 while True:
-    cartao = input("\nDigite aqui o numero do seu cartão, ou 'S'sair >> ").upper()[0]
-    if cartao[0] == "S":
+    cartao = input("\nDigite aqui o numero do seu cartão ou 'S'sair >> ").upper()  # trata as letras minusculas
+    if cartao[0] == "S":  # encerra se a primeira letra for "s"
         print("***OPERAÇÃO ENCERRADA!***")
-        break
+        break  # \\encerra o sistema se digitar o valor "s"
 
     senha1 = input("Digite aqui a sua senha >> ")
-    for c in cliente:
-        if c['num'] != cartao or c["senha"] != senha1:
-            # print('***Usuario ou senha não encontrado!***')
-            continue
-        else:
-            saldo = c["saldo"]
-            titular = c["nome"].upper()
-            senha = c["senha"]
+    for cliente in banco_dados:
+        if cliente['num'] == cartao and cliente[
+            "senha"] == senha1:  # \\valida se o cartão e senha digitados são igais ao banco de dados "cliente"
+            saldo = cliente["saldo"]
+            titular = cliente["nome"].upper()
 
-            menu = total(titular, saldo)
-            print(menu)
-            break
-    print('***Usuario ou senha não encontrado!***')
-    continue
+            escolha = menu(titular, saldo, cartao)  # \\os valores de nome e saldo sao baixados para menu de operações
 
-
-
+    print(
+        '\nINFORME UM CARTÃO E SENHA VALIDOS PARA CONTINUAR')  # \\retorna a pergunta ate validar acesso ou "s"para sair
+# \\Fim Se...
 
 
 
