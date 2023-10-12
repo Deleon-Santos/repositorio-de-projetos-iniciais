@@ -78,10 +78,10 @@ while True:
               '3-Cancelar o pedido\n'+
               '4-Encerra o sistema\n'+
               '>>')
-    if menu == '1': # na opcao '2' e gerado o 'num' como variavel global do pedido
+    if menu == '1': # na opcao '1' e gerado o 'num' como variavel global do pedido
         num=num+1
         entrada_pedido(num )
-    elif menu=='2': # na opção '3' e gerado a consulta geral de todos os pedidos
+    elif menu=='2': # na opção '2' e gerado a consulta geral de todos os pedidos
         consulta_pedido()
     elif menu== "3":
         cancelar_pedido()
@@ -93,8 +93,8 @@ while True:
         print('Digite uma opção valada')
         continue
 print()
-soma = 0
-quantia = 0
+# soma = 0
+# quantia = 0
 for lanche in lista_produto:
   if 'quantidade' in lanche:
     quantia=quantia + lanche['quantidade']
