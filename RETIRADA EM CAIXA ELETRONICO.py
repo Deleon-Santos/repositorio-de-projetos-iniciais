@@ -60,10 +60,12 @@ def sair(titular,saldo,cartao):
     print("OBRIGADO POR UTILIZAR NOSSOS SERVIÇOS".center(64))
     saldo_restante = saldo - sum(lista_saque)            #\\novo saldo apos os saques
 
-    #\\bloco com irformações das retiradas
-    print(f"\n>> A quantidade total de saques {len(lista_saque)}")
-    print(f">> O valor total do(s) saque(s) R$ {sum(lista_saque):.2f}")
-    print(f">> O saldo desta conta é R$ {saldo_restante:.2f}")
+    print('>> A quantidade total de saques:',end="")
+    print(f"{len(lista_saque)}".rjust(32,"-"))
+    print(">> A soma total dos saques",end="")
+    print(f"R$ {sum(lista_saque):.2f}".rjust(38,"-"))
+    print(">> O saldo desta conta ",end="")
+    print(f"R$ {saldo_restante:.2f}".rjust(41,"-"))
     print("\nVeja o historico de saques:")
     print(*lista_saque,sep="/")
 
