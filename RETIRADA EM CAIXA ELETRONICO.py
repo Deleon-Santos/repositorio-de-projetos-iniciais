@@ -16,8 +16,8 @@ banco_dados=[ {"cartao":"1","nome":"filho","senha":"1","saldo":20000.0},
 
 #*************************Inicio da função Saldo*******************************
 def saldo_conta(saldo):
-    print("--" * 23)
-    print("***SALDO EM CONTA CORRENTE***".center(46))
+    print("-" * 64)
+    print("SALDO EM CONTA CORRENTE".center(64))
     saldo -= sum(lista_saque)#\\ o saldo sera sempre a soma de soma de lista_saque - o saldo em "banco de dados
     print(f"Seu saldo em conta corrente é R$ {saldo:.2f}")
 #\\Fim Saldo
@@ -25,21 +25,21 @@ def saldo_conta(saldo):
 
 #*************************Inicio da função Saque*******************************
 def saque_conta(saldo):
-    print("--"*23)
-    print("***SAQUE EM CONTA CORRENTE***".center(46))
+    print("-"*64)
+    print("SAQUE EM CONTA CORRENTE".center(64))
     while True:
         try:
             valor_s = float(input("Digite o valor do saque R$ "))
             if valor_s+sum(lista_saque) <=saldo:
                 lista_saque.append(valor_s)
                 print()
-                print("***SAQUE AUTORIZADO***".center(46))
+                print("SAQUE AUTORIZADO".rjust(64))
                 print(f"Retire o valor no local informado R$ {valor_s:.2f}")
                 break #\\ se o valor da soma for inferior a saldo do cliente a operação e aprovada
 
             else:
                 print()
-                print("***SAQUE NÃO AUTORIZADO***".center(46))
+                print("SAQUE NÃO AUTORIZADO".rjust(64))
                 print('Consulte saldo em conta corrente\n')
                 break #\\se a soma for superior a operação sera negada
 
@@ -51,9 +51,9 @@ def saque_conta(saldo):
 
 #*************************Inicio da função sair*******************************
 def sair(titular,saldo,cartao):
-    print("--"*23)
-    print(f"{titular}".rjust(46))
-    print("Obrigado por ultilizar nossos serviços".upper())
+    print("-"*64)
+    print(f"{titular}".rjust(64))
+    print("OBRIGADO POR UTILIZAR NOSSOS SERVIÇOS".center(64))
     saldo_restante = saldo - sum(lista_saque)            #\\novo saldo apos os saques
 
     #\\bloco com irformações das retiradas
@@ -69,7 +69,7 @@ def sair(titular,saldo,cartao):
     lista_saque.clear()                            #\\ lista a lista para não interferir em outras transações
 
     print()
-    print("***OPERAÇÃO ENCERRADA!***".center(46))
+    print("OPERAÇÃO ENCERRADA".center(64))
     print('\n*'*3)
 #\\ Fim Sair
 
@@ -78,13 +78,13 @@ def sair(titular,saldo,cartao):
 def menu(titular,senha1,saldo,cartao):
     while True:
         print()                     #\\inicio do menu de operações
-        print("--"*23)
-        print(f"{titular}".rjust(46))
-        print("BEM-VINDO A SUA CONTA!")
-        menu=input(f"\nEscolha uma operação:\n"+
-                  "1-Saldo\n"+
-                  "2-Saque\n"+
-                  "0-Sair\n"+
+        print("-"*64)
+        print(f"{titular}".rjust(64))
+        print("BEM-VINDO A SUA CONTA".center(64))
+        menu=input("Escolha uma operação:\n"+
+                  "1----------------------------------------------------------Saldo\n"+
+                  "2----------------------------------------------------------Saque\n"+
+                  "0-----------------------------------------------------------Sair\n"+
                   ">>")
 
         if menu == "1":
@@ -107,48 +107,52 @@ def menu(titular,senha1,saldo,cartao):
 
 def leia_me():
 
-  print("\n                           Help!!!\n"+
+  print("\n                           HELP!!!\n"+
             'Este sistema foi desenvolvido em carater educativo, a validação\n'+
             'de login  e senha foram simplificados para tornar a experiencia\n'+
-            'mais intuitiva e dinâmica, soluções como bando de dados externo\n'+
-            'estão sendo implementos\n'+
+            'mais intuitiva e dinâmica, soluções como banco de dados externo\n'+
+            'estão e interface grafica ainda serão implementados\n'+
             'Versao: 1.00.1')
-  print("Dados".center(56))
+  print("Dados".center(64))
   print('+--------------------------------------------------------------+')
-  print('| num_cartão | senha_cartao | titular_cartao  |  saldo_titular |')
+  print('| num_cartão | senha_cartão | titular_cartão  |  saldo_titular |')
   print('+--------------------------------------------------------------+')
   print("|     1              1             filho         R$ 20.000,00  |")
   print("|     2              2              pai          R$ 10.000,00  |")
-  print("|     3              3              mae          R$ 50.000,00  |")
+  print("|     3              3              mãe          R$ 50.000,00  |")
   print('+--------------------------------------------------------------+')
+  print("ATENÇÃO!   Digite 'S' no input de cartão para encerrar o sistema")
+#Fim help
 
 
 #inicio
-print("INICIALIZANDO O SISTEMA".center(56))
+print("INICIALIZANDO O SISTEMA".center(64))
 
 enter=input("Para acessar dados do cartão e senha do titular digite 'leia-me'\n"+
-           "Digite qualquer tecla para continuar>> ").lower()
+           "Digite qualquer tecla para continuar__________________>>").lower()
 if enter == "leia-me":
-  leia_me = leia_me()
+    leia_me = leia_me()
 
-else:
 
-  print("INICIO DE SAQUE EM CAIXA ELETRÔNICO")
+print()
+print("INICIO DE SAQUE EM CAIXA ELETRÔNICO".center(64))
+print("-"*64)
 
 
 while True:
-    cartao = input("\nDigite aqui o numero do seu cartão ou 'S'sair>> ").upper()#trata as letras minusculas
+    cartao = input("Digite aqui o numero do seu cartão___________________________>>").upper()#trata as letras minusculas
     if cartao[0] == "S":                    #\\ encerra se a primeira letra for "s"
-        print("***OPERAÇÃO ENCERRADA!***".center(46))
+        print("OPERAÇÃO ENCERRADA".center(64))
         break                               #\\encerra o sistema se digitar o valor "s"
 
-    senha1 = input("Digite aqui a sua senha >> ")
+    senha1 = input("Digite aqui a sua senha______________________________________>>")
     for cliente in banco_dados:
         if cliente['cartao'] == cartao and cliente["senha"]== senha1:#\\valida se o cartão e senha digitados são igais ao banco de dados "cliente"
             saldo = cliente["saldo"]
             titular = cliente["nome"].upper()
 
-            menu_iniciar = menu(titular, senha1, saldo, cartao)                #\\os valores de nome e saldo sao baixados para menu de operações
+            menu_iniciar = menu(titular, senha1, saldo, cartao) #\\os valores de nome e saldo sao baixados para menu de operações
             continue
-    print('\nINFORME UM CARTÃO E SENHA VALIDOS PARA CONTINUAR'.center(46))#\\retorna a pergunta ate validar acesso ou "s"para sair
+    print()
+    print('INFORME UM CARTÃO E SENHA VALIDOS PARA CONTINUAR'.center(64))#\\retorna a pergunta ate validar acesso ou "s"para sair
 #\\Fim Se...
