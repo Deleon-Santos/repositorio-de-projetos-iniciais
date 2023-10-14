@@ -24,19 +24,23 @@ def saldo_conta(saldo):
 
 
 #*************************Inicio da função Saque*******************************
-def saque_conta(saldo):
+def saque_conta(saldo,senha1):
     print("-"*64)
     print("SAQUE EM CONTA CORRENTE".center(64))
     while True:
         try:
             valor_s = float(input("Digite o valor do saque R$ "))
             if valor_s+sum(lista_saque) <=saldo:
-                lista_saque.append(valor_s)
-                print()
-                print("SAQUE AUTORIZADO".rjust(64))
-                print(f"Retire o valor no local informado R$ {valor_s:.2f}")
-                break #\\ se o valor da soma for inferior a saldo do cliente a operação e aprovada
-
+                s=str(input("Digite aqui a sua senha______________________________________>>"))
+                if s == senha1:
+                    print()
+                    print("SAQUE AUTORIZADO".rjust(64))
+                    print(f"Retire o valor no local informado R$ {valor_s:.2f}")
+                    lista_saque.append(valor_s)
+                    break #\\ se o valor da soma for inferior a saldo do cliente a operação e aprovada
+                else:
+                    print("SENHA INVALIDA".rjust(64))
+                    break
             else:
                 print()
                 print("SAQUE NÃO AUTORIZADO".rjust(64))
@@ -92,7 +96,7 @@ def menu(titular,senha1,saldo,cartao):
             continue
 
         elif menu == "2":
-            saque_l=saque_conta(saldo)
+            saque_l=saque_conta(saldo,senha1)
             continue
 
         elif menu == "0":
@@ -107,7 +111,7 @@ def menu(titular,senha1,saldo,cartao):
 
 def leia_me():
 
-  print("\n                           HELP!!!\n"+
+  print("\n                            HELP!!!\n"+
             'Este sistema foi desenvolvido em carater educativo, a validação\n'+
             'de login  e senha foram simplificados para tornar a experiencia\n'+
             'mais intuitiva e dinâmica, soluções como banco de dados externo\n'+
