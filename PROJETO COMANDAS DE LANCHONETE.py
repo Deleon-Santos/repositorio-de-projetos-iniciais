@@ -1,5 +1,6 @@
 #CONTROLE DE COMANDAS EM LANCHONETE
 lista_produto=[]
+dicionario={}
 #dicionario com os itens e precos
 dic=[   {"cod":"1","lanche":"xburguer","preco": 10.90},
         {"cod":"2","lanche":"xbacon","preco": 9.90},
@@ -37,12 +38,13 @@ def entrada_pedido(num): #função de entrado com o parametro do codigo recebido
                 if item["cod"]==lanche:
                     lanche=item["lanche"]
                     preco = item['preco']
-                    dic = {'Comanda': num,  # o dicionario integra os valores do input
+                    dicionario = {'Comanda': num,
                                   'Lanche': lanche,
-                                  'Quantidade ': qtd,
+                                  'Quantidade': qtd,
                                   'Preco': preco}
 
-        lista_produto.append(dic.copy())
+                    lista_produto.append(dicionario.copy())
+                    break
     except ValueError:
         print('Entre com um valor numerico ')
         continue
@@ -50,17 +52,18 @@ def entrada_pedido(num): #função de entrado com o parametro do codigo recebido
 
 #***********************inicio da funcão d consulta*****************************
 def consulta_pedido():
-    while True:
-        print("CONSULTAR COMANDAS".center(55))
-        com=input("Digite o numero da comanda__________________________________>> ")
 
-        for lanche in lista_produto:
-            if lanche['cod'] == com:
-                for key, value in lanche.items():  # para  posiçoes 'key e value' no 'lanche' os items
-                    print(f'{key} --------------------------------------------- {value}')
-            else:
-                print("Esta comanda não foi encontrada")
-                break
+    print("CONSULTAR COMANDAS".center(55))
+    com=int(input("Digite o numero da comanda__________________________>>"))
+
+    for lanche in lista_produto:
+        if lanche["Comanda"] == com:
+            for key, value in lanche.items():  # para  posiçoes 'key e value' no 'lanche' os items
+                print(f'{key}')
+                print(f'{value}'.rjust(55,"-"))
+
+        else:
+            print("Esta comanda não foi encontrada")
 
 
 #*********************incio da função cancelar produto**************************
@@ -86,7 +89,7 @@ while True:
         num=num+1
         entrada_pedido(num )
     elif menu=='3': # na opção '2' e gerado a consulta geral de todos os pedidos
-        consulta_pedido(num)
+        consulta_pedido()
     # elif menu== "3":
     #     cancelar_pedido()
     elif menu=='1':
@@ -96,25 +99,21 @@ while True:
     else:
         print('Digite uma opção valada')
         continue
-# print()
-# # soma = 0
-# # quantia = 0
-# for lanche in lista_produto:
-#   if 'quantidade' in lanche:
-#     quantia=quantia + lanche['quantidade']
-# print(f'A quantidade de lanche e = {quantia}')
-#
-# print('\nVeja os detalhes das vendas do dia ')
-# for lanche in lista_produto:
-#   for k,v in lanche.items():
-#     print(f'{k}={v}')
-#
-# for lanche in lista_produto:
-#   if 'preco' in lanche:
-#     soma += lanche['preco']
-# print(f"O total arrecadado foi = R$ {soma}")
-#
-#
-# print(f'A quantidade de lanche e = {quantia}')
+print()
+soma = 0
+quantia = 0
+print"Produto                    Quantidade                          Valor"
+for lanche in lista_produto:
+    p=lanche["Lanche"]
+    #for lanche in dicio:
+    #if lanche['Lanche']== "xburguer":
+   #print(lanche["Lanche"])
+    soma += lanche['Quantidade']
+
+    quantia+= lanche["Preco"]
+
+    print(f"{soma}                   {p} ,                       {quantia}")
+
+#print(f"{soma}, {}")
 #
 # print('****************OBRIGADO! VOLTE SEMPRE!****************')
