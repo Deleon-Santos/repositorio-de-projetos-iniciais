@@ -19,7 +19,8 @@ def saldo_conta(saldo):
     print("-" * 64)
     print("SALDO EM CONTA CORRENTE".center(64))
     saldo -= sum(lista_saque)#\\ o saldo sera sempre a soma de soma de lista_saque - o saldo em "banco de dados
-    print(f"Seu saldo em conta corrente é R$ {saldo:.2f}")
+    print(f"Seu saldo em conta corrente ",end="")
+    print(f"R$ {saldo:.2f}".rjust(36,"-"))
 #\\Fim Saldo
 
 
@@ -35,7 +36,8 @@ def saque_conta(saldo,senha1):
                 if s == senha1:
                     print()
                     print("SAQUE AUTORIZADO".rjust(64))
-                    print(f"Retire o valor no local informado R$ {valor_s:.2f}")
+                    print("Retire o valor no local informado",end="")
+                    print(f"R$ {valor_s:.2f}".rjust(31,"-"))
                     lista_saque.append(valor_s)
                     break #\\ se o valor da soma for inferior a saldo do cliente a operação e aprovada
                 else:
