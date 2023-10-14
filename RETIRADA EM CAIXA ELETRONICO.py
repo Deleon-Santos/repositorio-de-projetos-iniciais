@@ -15,8 +15,9 @@ banco_dados=[ {"cartao":"1","nome":"filho","senha":"1","saldo":20000.0},
 
 
 #*************************Inicio da função Saldo*******************************
-def saldo_conta(saldo):
+def saldo_conta(saldo,titular):
     print("-" * 64)
+    print(f"{titular}".rjust(64))
     print("SALDO EM CONTA CORRENTE".center(64))
     saldo -= sum(lista_saque)#\\ o saldo sera sempre a soma de soma de lista_saque - o saldo em "banco de dados
     print(f"Seu saldo em conta corrente ",end="")
@@ -25,8 +26,9 @@ def saldo_conta(saldo):
 
 
 #*************************Inicio da função Saque*******************************
-def saque_conta(saldo,senha1):
+def saque_conta(saldo,senha1,titular):
     print("-"*64)
+    print(f"{titular}".rjust(64))
     print("SAQUE EM CONTA CORRENTE".center(64))
     while True:
         try:
@@ -62,13 +64,13 @@ def sair(titular,saldo,cartao):
     print("OBRIGADO POR UTILIZAR NOSSOS SERVIÇOS".center(64))
     saldo_restante = saldo - sum(lista_saque)            #\\novo saldo apos os saques
 
-    print('>> A quantidade total de saques:',end="")
+    print('\n>> A quantidade total de saques:',end="")
     print(f"{len(lista_saque)}".rjust(32,"-"))
     print(">> A soma total dos saques",end="")
     print(f"R$ {sum(lista_saque):.2f}".rjust(38,"-"))
     print(">> O saldo desta conta ",end="")
     print(f"R$ {saldo_restante:.2f}".rjust(41,"-"))
-    print("\nVeja o historico de saques:")
+    print("\nVeja o histórico de saques")
     print(*lista_saque,sep="/")
 
     for cliente in banco_dados:                    #\\atualiza a chave "saldo" com os valores atuais em cliente
@@ -78,7 +80,7 @@ def sair(titular,saldo,cartao):
 
     print()
     print("OPERAÇÃO ENCERRADA".center(64))
-    print('\n*'*3)
+    print('***'.center(64))
 #\\ Fim Sair
 
 
@@ -96,11 +98,11 @@ def menu(titular,senha1,saldo,cartao):
                   ">>")
 
         if menu == "1":
-            saldo_l=saldo_conta(saldo)
+            saldo_l=saldo_conta(saldo,titular)
             continue
 
         elif menu == "2":
-            saque_l=saque_conta(saldo,senha1)
+            saque_l=saque_conta(saldo,senha1,titular)
             continue
 
         elif menu == "0":
