@@ -1,119 +1,167 @@
 #CONTROLE DE COMANDAS EM LANCHONETE
 lista_produto=[]
+lista1=[]
 dicionario={}
-#dicionario com os itens e precos
-dic=[   {"cod":"1","lanche":"xburguer","preco": 10.90},
-        {"cod":"2","lanche":"xbacon","preco": 9.90},
-        {"cod":"3","lanche":"xsalada" ,"preco":9.90},
-        {"cod":"4","lanche":"xbacon","preco": 9.90},
-        {"cod":"5","lanche":"refrigerante","preco":5.90}]
-num = 0
+dic=[   {"cod":"1","lanche":"xburguer","preco":10.90},
+        {"cod":"2","lanche":"xbacon  ","preco":9.90},
+        {"cod":"3","lanche":"xsalada ","preco":9.90},
+        {"cod":"4","lanche":"xtudo   ","preco":15.90},
+        {"cod":"5","lanche":"refriger","preco":5.90}]
 
-#****************inicio da função que imprime o cardapio************************
+
+#inicio da função que imprime o cardapio
+
 def cardapio():
-    print('*'*55)
-    print('              +---+----------+---------+')
-    print('              |COD|  PRODUTO |  PREÇO  |')
-    print('              +---+----------+---------+')
-    print('              | 1 | XBURGUER | R$10.90 |')
-    print('              | 2 | X BACON  | R$9.90  |')
-    print('              | 3 | X SALADA | R$9.90  |')
-    print('              | 4 | X TUDO   | R$15.90 |')
-    print('              +---+----------+---------+')
-    print('*'*55)
+    print("BEM-VINDO AO BOCA NERVOSA".center(55,"*"))
+    print('+-------------+-----------------+---------------------+')
+    print('|   CODIGO    |      PRODUTO    |        PREÇO        |')
+    print('+-------------+-----------------+---------------------+')
+    print('|     1       |     XBURGUER    |       R$10.90       |')
+    print('|     2       |     X BACON     |       R$9.90        |')
+    print('|     3       |     X SALADA    |       R$9.90        |')
+    print('|     4       |     X TUDO      |       R$15.90       |')
+    print('|     5       |   REFRIGERANTE  |       R$5.90        |')
+    print('+-------------+-----------------+---------------------+')
+    print("*******************************************************")
 
-#**************************inicio da função pedido******************************
-def entrada_pedido(num): #função de entrado com o parametro do codigo recebido pela entra de pedido
-  while True:#laço para tratamento de erros
+
+#//inicio da função pedido
+
+def entrada_pedido(num):
+  soma_preco=0
+  print("NOVO PEDIDO".center(55,"-"))
+  print("S-SAIR                                         P-PAGAR\n")
+  while True:
     try:
-        print(f"COMANDA n° {num}".rjust(55,"_"))
-        lanche = input('Digite o código do lanche que deseja incluir________>>')
-        if lanche !="1" and lanche!="2" and lanche!="3" and lanche!="4":
-            print('Escolha uma opção dentro do cardapio')
-            continue #continua perguntado uma das opções do menu
-
-        else:
-             qtd = int(input('Digite a quantidade desejada incluir________________>>'))
-             for item in dic:
-                if item["cod"]==lanche:
-                    lanche=item["lanche"]
-                    preco = item['preco']
-                    dicionario = {'Comanda': num,
-                                  'Lanche': lanche,
-                                  'Quantidade': qtd,
-                                  'Preco': preco}
-
-                    lista_produto.append(dicionario.copy())
-                    break
+      lanche = input('Digite o código do lanche que deseja>>').upper()
+      if lanche[0] not in "12345SP":
+        print('Escolha uma opção dentro do cardapio')
+      elif lanche =="P":
+        print(f"VALOR PAGO R$ {soma_preco:.2f}".rjust(55))
+        lista_produto.extend(lista1)
+        lista1.clear()
+        break
+      elif lanche[0]=="S":
+        print("CANCELADO".rjust(55))
+        lista1.clear()
+        break
+      else:
+        qtd = int(input('Digite a quantidade desejada incluir>>'))
+        num+=1
+        for item in dic:
+            if item["cod"]==lanche:
+                lanche=item["lanche"]
+                preco = item['preco']*qtd
+                soma_preco+=preco
+                print(f"COMANDA n° {num}".rjust(55))
+                print(f"{qtd}                    {lanche}",end="")
+                print(f"{preco:.2f}".rjust(26))
+                print("SubTotal",end="")
+                print(f"{soma_preco:.2f}".rjust(47))
+                dicionario = {'Comanda': num,
+                              'Lanche': lanche,
+                              'Quantidade': qtd,
+                              'Preco': preco}
+                lista1.append(dicionario.copy())
     except ValueError:
         print('Entre com um valor numerico ')
         continue
-    break
 
-#***********************inicio da funcão d consulta*****************************
+
+#//inicio da funcão d consulta
+
 def consulta_pedido():
+    try:
+      print("CONSULTAR COMANDA".center(55,"-"))
+      print("0-Todas".rjust(55))
 
-    print("CONSULTAR COMANDAS".center(55))
-    com=int(input("Digite o numero da comanda__________________________>>"))
+      com=int(input("\nDigite o numero da comanda>>"))
+      if com != 0:
+        print("Comanda          Lanche        Quantidade         Preco")
+        for lanche in lista_produto:
+            if lanche["Comanda"] == com:
+              print(f'N° {lanche["Comanda"]}            {lanche["Lanche"]}           {lanche["Quantidade"]}              {lanche["Preco"]:.2f} ')
+              break
+      else:
+        print("Comanda          Lanche        Quantidade         Preco")
+        for lanche in lista_produto:
+          print(f'Nª {lanche["Comanda"]}            {lanche["Lanche"]}           {lanche["Quantidade"]}              {lanche["Preco"]:.2f} ')
+        return
+    except ValueError:
+      print("COMANDA INVALIDA")
 
+
+#//incio da função cancelar produto
+
+def cancelar_pedido():
+  print("EXCLUIR COMANDA".center(55,"-"))
+  print("0-Sair".rjust(55))
+  num=int(input('\nDigite o numero da comanda>>'))
+  if num!=0:
+    print("Comanda          Lanche        Quantidade         Preco")
     for lanche in lista_produto:
-        if lanche["Comanda"] == com:
-            for key, value in lanche.items():  # para  posiçoes 'key e value' no 'lanche' os items
-                print(f'{key}')
-                print(f'{value}'.rjust(55,"-"))
+        if lanche["Comanda"] == num:
+          print(f'N° {lanche["Comanda"]}            {lanche["Lanche"]}           {lanche["Quantidade"]}              {lanche["Preco"]:.2f} ')
+          break
 
-        else:
-            print("Esta comanda não foi encontrada")
+    perg=input("\n0-SAIR                                       1-EXCLUIR\n"+">>").upper()
+    if perg[0]in"1E":
+      lista_produto.remove(lanche)#exclua da lista de produtos
+      print("EXCLUIDA".rjust(55))
+    else:
+      print("Voltar".rjust(55))
+      return
+  else:
+    print("COMANDA INVALIDA!")
 
 
-#*********************incio da função cancelar produto**************************
-# def cancelar_pedido():
-#   num=int(input('\n<<Entre com o numero do pedido para cancelamento: ' ))
-#   for p in lista_produto:
-#     if p['pedido']==num:#se o valor"p" na posição "pedido" for igual a "mun" escolha
-#       lista_produto.remove(p)#exclua da lista de produtos
-#       print(f"O pedido numero '{p}' foi CANCELADO")
+#//inicio do programa principal
 
-#***********************inicio do programa principal****************************
 print('*'*55)
 cardapio()
 while True:
     print()
-    menu=input('                     MENU INICIAL \n'+
-              '1-Cardapio       2-Pedido        3-Consulta        Sair\n'+
-              ''
+    print("MENU PRINCIPAL".center(55,"-"))
+    print('1-Pedir      2-Consultar      3-Excluir      0-Cardapio')
+    menu=input('                                                   Sair\n'+
               '>>').upper()
-
-
-    if menu == '2': # na opcao '1' e gerado o 'num' como variavel global do pedido
-        num=num+1
-        entrada_pedido(num )
-    elif menu=='3': # na opção '2' e gerado a consulta geral de todos os pedidos
+    if menu == '1':
+        num=len(lista_produto)
+        entrada_pedido(num)
+    elif menu=='2':
         consulta_pedido()
-    # elif menu== "3":
-    #     cancelar_pedido()
-    elif menu=='1':
+    elif menu=="3":
+        cancelar_pedido()
+    elif menu=='0':
         cardapio()
     elif menu[0] == "S":
         break #encerra o programa
     else:
-        print('Digite uma opção valada')
+        print('OPÇÃO INVALIDA!')
         continue
+print("VENDA TOTAL DO DIA".center(55))
+qtd_t=0
+som_t=0
+for l in ["xburguer","xbacon  ","xsalada ","xtudo   ","refriger"]:
+  qtd=0
+  somas=0
+  for lanche in lista_produto:
+    if lanche["Lanche"]==l and lanche["Quantidade"]!=0:
+      qtd+=lanche["Quantidade"]
+      somas+=lanche["Preco"]
+  print(f"{l}                  {qtd}",end="")
+  print(f"{somas:.2f}".rjust(28))
+  qtd_t+=qtd
+  som_t+=somas
 print()
-soma = 0
-quantia = 0
-print"Produto                    Quantidade                          Valor"
-for lanche in lista_produto:
-    p=lanche["Lanche"]
-    #for lanche in dicio:
-    #if lanche['Lanche']== "xburguer":
-   #print(lanche["Lanche"])
-    soma += lanche['Quantidade']
+print(f"Total Lenches",end="")
+print(f"{qtd_t}".rjust(14))
+print(f"Soma Total ",end="")
+print(f"R$ {som_t:.2f}".rjust(44))
+print()
+print("ENCERRANDO O SISTEMA".center(55))
 
-    quantia+= lanche["Preco"]
 
-    print(f"{soma}                   {p} ,                       {quantia}")
 
-#print(f"{soma}, {}")
-#
-# print('****************OBRIGADO! VOLTE SEMPRE!****************')
+
+
