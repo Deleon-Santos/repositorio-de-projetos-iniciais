@@ -1,4 +1,0 @@
-novo
-continuando a au de vercionamento 
-git branch: visualisa as branch's existentes
-git checkout (branch) auterna entre as branch existentes 
