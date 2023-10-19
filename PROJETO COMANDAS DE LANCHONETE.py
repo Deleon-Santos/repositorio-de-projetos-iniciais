@@ -1,16 +1,17 @@
+
 #CONTROLE DE COMANDAS EM LANCHONETE
 lista_produto=[]
 lista1=[]
 dicionario={}
+# import json
 dic=[   {"cod":"1","lanche":"xburguer","preco":10.90},
         {"cod":"2","lanche":"xbacon  ","preco":9.90},
         {"cod":"3","lanche":"xsalada ","preco":9.90},
         {"cod":"4","lanche":"xtudo   ","preco":15.90},
         {"cod":"5","lanche":"refriger","preco":5.90}]
 
-
+com=0
 #inicio da função que imprime o cardapio
-
 def cardapio():
     print("BEM-VINDO AO BOCA NERVOSA".center(55,"*"))
     print('+-------------+-----------------+---------------------+')
@@ -26,112 +27,105 @@ def cardapio():
 
 
 #//inicio da função pedido
+def entrada_pedido(com):
+    soma2=0
+    num=0
+    print("NOVO PEDIDO".center(55,"-"))
+    print("S-SAIR                C-CANCELAR                P-PAGAR\n")
+    print(f"COMANDA n° {com}".rjust(55))
 
-def entrada_pedido(num):
-  soma_preco=0
-  print("NOVO PEDIDO".center(55,"-"))
-  print("S-SAIR                                         P-PAGAR\n")
-  while True:
-    try:
-      lanche = input('Digite o código do lanche que deseja>>').upper()
-      if lanche[0] not in "12345SP":
-        print('Escolha uma opção dentro do cardapio')
-      elif lanche =="P":
-        print(f"VALOR PAGO R$ {soma_preco:.2f}".rjust(55))
-        lista_produto.extend(lista1)
-        lista1.clear()
-        break
-      elif lanche[0]=="S":
-        print("CANCELADO".rjust(55))
-        lista1.clear()
-        break
-      else:
-        qtd = int(input('Digite a quantidade desejada incluir>>'))
-        num+=1
-        for item in dic:
-            if item["cod"]==lanche:
-                lanche=item["lanche"]
-                preco = item['preco']*qtd
-                soma_preco+=preco
-                print(f"COMANDA n° {num}".rjust(55))
-                print(f"{qtd}                    {lanche}",end="")
-                print(f"{preco:.2f}".rjust(26))
-                print("SubTotal",end="")
-                print(f"{soma_preco:.2f}".rjust(47))
-                dicionario = {'Comanda': num,
-                              'Lanche': lanche,
-                              'Quantidade': qtd,
-                              'Preco': preco}
-                lista1.append(dicionario.copy())
-    except ValueError:
-        print('Entre com um valor numerico ')
-        continue
+    while True:
+        try:
+            lanche = input('Digite o código do lanche que deseja>>').upper()
+            if lanche[0] not in "12345SPC":
+                print('Escolha uma opção dentro do cardapio')
+
+            elif lanche[0]=="C":
+                num1=int(input('\nDigite o numero do item>>'))
+                for lanche in lista1:
+                    if lanche["Comanda"] == num1:
+                        soma2-=lanche["Preco"]
+                        print(f'N° {lanche["Comanda"]}            {lanche["Lanche"]}          -{lanche["Quantidade"]}          -R$ {lanche["Preco"]:.2f} ')
+                        lista1.remove(lanche)#exclua da lista de produtos
+                print("REMOVIDO".rjust(55))
+                continue
+
+            elif lanche =="P":
+                print(f"VALOR PAGO R$ {soma2:.2f}".rjust(55))
+                lista_produto.extend(lista1)
+                lista1.clear()
+                break
+
+            elif lanche=="S":
+                lista1.clear()
+                print("PEDIDO CANCELADO".rjust(55))
+                break
+
+            else:
+                qtd = int(input('Digite a quantidade desejada incluir>>'))
+                num+=1
+                for item in dic:
+                    if item["cod"]==lanche:
+                        lanche=item["lanche"]
+                        preco = item['preco']*qtd
+                        soma2+=preco
+                        dicionario = {'Pedido': com,
+                                    'Comanda': num,
+                                    'Lanche': lanche,
+                                    'Quantidade': qtd,
+                                    'Preco': preco,}
+                        lista1.append(dicionario.copy())
+
+                        print("Item          Lanche          Quantidade          Preco")
+                        for lanche in lista1:
+                            pre=lanche["Preco"]
+                            print(f'N° {lanche["Comanda"]}         {lanche["Lanche"]}              {lanche["Quantidade"]}',end="")
+                            print(f"R$ {pre:.2f}".rjust(19))
+                        print("SubTotal",end="")
+                        print(f"R$ {soma2:.2f}".rjust(47))
+        except ValueError:
+            print('Entre com um valor numerico ')
+            continue
 
 
 #//inicio da funcão d consulta
-
 def consulta_pedido():
     try:
-      print("CONSULTAR COMANDA".center(55,"-"))
-      print("0-Todas".rjust(55))
-
-      com=int(input("\nDigite o numero da comanda>>"))
-      if com != 0:
-        print("Comanda          Lanche        Quantidade         Preco")
-        for lanche in lista_produto:
-            if lanche["Comanda"] == com:
-              print(f'N° {lanche["Comanda"]}            {lanche["Lanche"]}           {lanche["Quantidade"]}              {lanche["Preco"]:.2f} ')
-              break
-      else:
-        print("Comanda          Lanche        Quantidade         Preco")
-        for lanche in lista_produto:
-          print(f'Nª {lanche["Comanda"]}            {lanche["Lanche"]}           {lanche["Quantidade"]}              {lanche["Preco"]:.2f} ')
-        return
+        print("CONSULTAR COMANDA".center(55,"-"))
+        print("0-Todas".rjust(55))
+        com1=int(input("\nDigite o numero da comanda>>"))
+        if com1 == 0:
+            print("Com     Item         Lanche       Quantidade      Preco")
+            for lanche in lista_produto:
+                p=lanche["Preco"]
+                print(f'{lanche["Pedido"]}        {lanche["Comanda"]}          {lanche["Lanche"]}           {lanche["Quantidade"]}',end="")
+                print(f"R$ {p:.2f}".rjust(15))
+        else:
+            print("Com     Item         Lanche       Quantidade      Preco")
+            for lanche in lista_produto:
+                if lanche["Pedido"] == com1:
+                    p=lanche["Preco"]
+                    print(f'{lanche["Pedido"]}        {lanche["Comanda"]}          {lanche["Lanche"]}           {lanche["Quantidade"]}',end="")
+                    print(f"R$ {p:.2f}".rjust(15))
     except ValueError:
-      print("COMANDA INVALIDA")
-
+        print("Nao encontrada")
 
 #//incio da função cancelar produto
-
-def cancelar_pedido():
-  print("EXCLUIR COMANDA".center(55,"-"))
-  print("0-Sair".rjust(55))
-  num=int(input('\nDigite o numero da comanda>>'))
-  if num!=0:
-    print("Comanda          Lanche        Quantidade         Preco")
-    for lanche in lista_produto:
-        if lanche["Comanda"] == num:
-          print(f'N° {lanche["Comanda"]}            {lanche["Lanche"]}           {lanche["Quantidade"]}              {lanche["Preco"]:.2f} ')
-          break
-
-    perg=input("\n0-SAIR                                       1-EXCLUIR\n"+">>").upper()
-    if perg[0]in"1E":
-      lista_produto.remove(lanche)#exclua da lista de produtos
-      print("EXCLUIDA".rjust(55))
-    else:
-      print("Voltar".rjust(55))
-      return
-  else:
-    print("COMANDA INVALIDA!")
-
-
-#//inicio do programa principal
-
+# with open('cardapio.txt', 'w') as arquivo:
+#     json.dump(dic, arquivo)
 print('*'*55)
 cardapio()
 while True:
     print()
     print("MENU PRINCIPAL".center(55,"-"))
-    print('1-Pedir      2-Consultar      3-Excluir      0-Cardapio')
+    print('1-Pedir               2-Consultar            0-Cardapio')
     menu=input('                                                   Sair\n'+
               '>>').upper()
     if menu == '1':
-        num=len(lista_produto)
-        entrada_pedido(num)
+        com+=1
+        entrada_pedido(com)
     elif menu=='2':
         consulta_pedido()
-    elif menu=="3":
-        cancelar_pedido()
     elif menu=='0':
         cardapio()
     elif menu[0] == "S":
@@ -139,20 +133,21 @@ while True:
     else:
         print('OPÇÃO INVALIDA!')
         continue
+
 print("VENDA TOTAL DO DIA".center(55))
 qtd_t=0
 som_t=0
 for l in ["xburguer","xbacon  ","xsalada ","xtudo   ","refriger"]:
-  qtd=0
-  somas=0
-  for lanche in lista_produto:
-    if lanche["Lanche"]==l and lanche["Quantidade"]!=0:
-      qtd+=lanche["Quantidade"]
-      somas+=lanche["Preco"]
-  print(f"{l}                  {qtd}",end="")
-  print(f"{somas:.2f}".rjust(28))
-  qtd_t+=qtd
-  som_t+=somas
+    qtd=0
+    somas=0
+    for lanche in lista_produto:
+        if lanche["Lanche"]==l and lanche["Quantidade"]!=0:
+            qtd+=lanche["Quantidade"]
+            somas+=lanche["Preco"]
+    print(f"{l}                  {qtd}",end="")
+    print(f"{somas:.2f}".rjust(28))
+    qtd_t+=qtd
+    som_t+=somas
 print()
 print(f"Total Lenches",end="")
 print(f"{qtd_t}".rjust(14))
