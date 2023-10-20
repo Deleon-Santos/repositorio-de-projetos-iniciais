@@ -52,7 +52,7 @@ def entrada_pedido(com):
                         soma2 = coleta(lanche1, soma2, com, num)  # envia e rotorna os parametros
                         continue
 
-                print("Indisponivel")
+
         except ValueError:
             print('Entre com um valor numerico ')
             continue
@@ -127,14 +127,16 @@ def total():
     print("VENDA TOTAL DO DIA".center(55))
     qtd_t = 0
     som_t = 0
-    for l in ["xburguer", "xbacon  ", "xsalada ", "xtudo   ", "refriger"]:  # para cada lanche
+    for item in dic:  # para cada lanche
+        x= item["lanche"]
         qtd = 0
         somas = 0
         for lanche in lista_produto:  # para cada lanche em lista_produto calcuta a quantidade eo preco
-            if lanche["Lanche"] == l and lanche["Quantidade"] != 0:
-                qtd += lanche["Quantidade"]
-                somas += lanche["Preco"]
-        print(f"{l}                  {qtd}", end="")
+            if lanche["Lanche"]==x: #== l and lanche["Quantidade"] != 0:
+                if lanche["Quantidade"]>0:
+                    qtd += lanche["Quantidade"]
+                    somas += lanche["Preco"]
+        print(f"{x}                  {qtd}", end="")
         print(f"{somas:.2f}".rjust(28))
         qtd_t += qtd
         som_t += somas
