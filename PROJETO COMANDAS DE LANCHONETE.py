@@ -29,27 +29,30 @@ def entrada_pedido(com):
         try:
             lanche1 = input('Digite o código do lanche que deseja>>').upper()
             # retorna o laço quando as opções sao invalidas
-            if lanche1[0] not in "12345SPC":
-                print('Escolha uma opção dentro do cardapio')
-            # cancela o item e retorna a soma2 atualizada
+            if lanche1[0] == "S":
+                lista1.clear()  # limpa a lista1
+                print("Comanda cancelada")
+                break
+
             elif lanche1[0] == "C":
                 soma2 = remover(soma2)
                 continue
             # encerra o laço e rotorna o valor soma2 a ser pago
-            elif lanche1 == "P":
+            elif lanche1[0] == "P":
                 print(f"VALOR PAGO R$ {soma2:.2f}".rjust(55))
                 lista_produto.extend(lista1)  # adiciona os novos itens na lista_produto
                 lista1.clear()
                 break
-            # encerra o laço e anula a comando
-            elif lanche1 == "S":
-                lista1.clear()  # limpa a lista1
-                break
-            # recebe a quantidade e processa os dados no dicionario
+
             else:
-                num += 1
-                soma2 = coleta(lanche1, soma2, com, num)  # envia e rotorna os parametros
-                continue
+                for item in dic:
+                    if lanche1 in item["cod"]:
+
+                        num += 1
+                        soma2 = coleta(lanche1, soma2, com, num)  # envia e rotorna os parametros
+                        continue
+
+                print("Indisponivel")
         except ValueError:
             print('Entre com um valor numerico ')
             continue
