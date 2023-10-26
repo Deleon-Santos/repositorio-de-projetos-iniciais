@@ -47,12 +47,9 @@ def entrada_pedido(com):
             else:
                 for item in dic:
                     if lanche1 in item["cod"]:
-
                         num += 1
                         soma2 = coleta(lanche1, soma2, com, num)  # envia e rotorna os parametros
                         continue
-
-
         except ValueError:
             print('Entre com um valor numerico ')
             continue
@@ -77,9 +74,10 @@ def coleta(lanche1, soma2, com, num):
                 for lanche in lista1:
                     pre = lanche["Preco"]
                     print(
-                        f'N°{lanche["Comanda"]:<7}    {lanche["Lanche"]:<18}   {lanche["Quantidade"]:9<}            R${pre:>6.2f}')
+                        f'N°{lanche["Comanda"]:<7}    {lanche["Lanche"]:<18}',end="")
+                    print(f'{lanche["Quantidade"]:>5}           R${pre:>6.2f}')
                 print("SubTotal", end="")
-                print(f"R$ {soma2:.2f}".rjust(47))
+                print(f"R${soma2:.2f}".rjust(47))
         return soma2  # retorna o valor soma2
     except ValueError:
         print('Entre com um valor numerico ')
@@ -90,8 +88,7 @@ def remover(soma2):
         for lanche in lista1:
             if lanche["Comanda"] == num1:  # exclui a partir do codigo do item
                 soma2 -= lanche["Preco"]
-                print(
-                    f'N°{lanche["Comanda"]:<7}    {lanche["Lanche"]:<18}  -{lanche["Quantidade"]:<9}   -R$ {lanche["Preco"]:>4.2f} ')
+                print(f'N°{lanche["Comanda"]}{lanche["Lanche"]:>15}          -{lanche["Quantidade"]:>3}              -R${lanche["Preco"]:>6.2f} ')
                 lista1.remove(lanche)  # exclua da lista de produtos
         print("REMOVIDO".rjust(55))
         return soma2  # retorna a soma2 atualizada
@@ -107,19 +104,15 @@ def consulta_pedido():
             print("Com     Item         Lanche       Quantidade      Preco")
             for lanche in lista_produto:
                 p = lanche["Preco"]
-                print(
-                    f'{lanche["Pedido"]}        {lanche["Comanda"]}          {lanche["Lanche"]}           {lanche["Quantidade"]}',
-                    end="")
-                print(f"R$ {p:.2f}".rjust(15))
+                print(f'{lanche["Pedido"]}        {lanche["Comanda"]}          {lanche["Lanche"]}         {lanche["Quantidade"]:>2}',end="")
+                print(f"        R${p:6.2f}")
         else:  # consulta o numero informado em inpute
             print("Com     Item         Lanche       Quantidade      Preco")
             for lanche in lista_produto:
                 if lanche["Pedido"] == com1:
                     p = lanche["Preco"]
-                    print(
-                        f'{lanche["Pedido"]}        {lanche["Comanda"]}          {lanche["Lanche"]}           {lanche["Quantidade"]}',
-                        end="")
-                    print(f"R$ {p:.2f}".rjust(15))
+                    print(f'{lanche["Pedido"]}        {lanche["Comanda"]}          {lanche["Lanche"]}         {lanche["Quantidade"]:>2}',end="")
+                    print(f"        R${p:6.2f}")
     except ValueError:
         print("Nao encontrada")
 
@@ -132,19 +125,15 @@ def total():
         qtd = 0
         somas = 0
         for lanche in lista_produto:  # para cada lanche em lista_produto calcuta a quantidade eo preco
-            if lanche["Lanche"]==x: #== l and lanche["Quantidade"] != 0:
-                if lanche["Quantidade"]>0:
-                    qtd += lanche["Quantidade"]
-                    somas += lanche["Preco"]
-        print(f"{x}                  {qtd}", end="")
-        print(f"{somas:.2f}".rjust(28))
-        qtd_t += qtd
-        som_t += somas
+            if lanche["Lanche"]==x:
+                qtd += lanche["Quantidade"]
+                somas += lanche["Preco"]
+        if qtd>0:
+            print(f"{x}{qtd:>19}                   R${somas:>7.2f}")
+            qtd_t += qtd
+            som_t += somas
     print()  # escrita dos falores totais
-    print(f"Total Lenches", end="")
-    print(f"{qtd_t}".rjust(14))
-    print(f"Soma Total ", end="")
-    print(f"R$ {som_t:.2f}".rjust(44))
+    print(f"Totais           {qtd_t:>10}                   R${som_t:>7.2f}")
     print()
     print("Sair".rjust(55))
 
@@ -153,31 +142,33 @@ def total():
 print('*' * 55)
 cardapio()
 while True:
-    print()
-    print("MENU PRINCIPAL".center(55, "-"))
-    print('1-Pedir      2-Consultar      3-Cardapio       4-Totais')
-    menu = input('>> ').upper()
-    if menu == '1':
-        com += 1
-        entrada_pedido(com)
-    elif menu == '2':
-        consulta_pedido()
-    elif menu == '3':
-        cardapio()
-    elif menu == "4":
-        total()
-        continue
-    elif menu[0] == "S":  # encerra o programa
-        print("Deseja Encerrar o sistema?")
-        print("SIM       NÂO".center(55))
-        per = input(">>").upper()
-        if per[0] == "S":
-            print("ENCERRANDO O SISTEMA".center(55))
-            break
-    else:
-        print('OPÇÃO INVALIDA!')
-        continue
-
+    try:
+        print()
+        print("MENU PRINCIPAL".center(55, "-"))
+        print('1-Pedir      2-Consultar      3-Cardapio       4-Totais')
+        menu = input('>> ').upper()
+        if menu == '1':
+            com += 1
+            entrada_pedido(com)
+        elif menu == '2':
+            consulta_pedido()
+        elif menu == '3':
+            cardapio()
+        elif menu == "4":
+            total()
+            continue
+        elif menu[0] == "S":  # encerra o programa
+            print("Deseja Encerrar o sistema?")
+            print("SIM       NÂO".center(55))
+            per = input(">>").upper()
+            if per[0] == "S":
+                print("ENCERRANDO O SISTEMA".center(55))
+                break
+        else:
+            print('OPÇÃO INVALIDA!')
+            continue
+    except :
+        print("Escolhe uma da opções do menu")
 
 
 
