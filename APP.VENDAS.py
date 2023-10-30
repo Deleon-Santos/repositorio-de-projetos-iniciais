@@ -112,12 +112,14 @@ def novo_item():
 
 #===========================================================================================================
 
-menu_layout=[["Novo",["Nova Compra","Novo Produto","Pesquisar Produto"]],["Totais",["Venda Comanda","Venda Total"]],["Suporte",["Ajuda"]]]
+menu_layout=[["Novo",["Nova Compra","Novo Produto","Pesquisar Produto"]],
+             ["Totais",["Venda Comanda","Venda Total"]],["Suporte",["Ajuda"]]]
 layout = [
     [sg.Menu(menu_layout)],
-       [sg.Text("SEJA BEM-VINDO", size=(52, 1), justification='center', font=("Any", 35)), sg.Image("morto de fome.png",size=(1,1))],
-    [sg.Text('Código do lanche',size=(25,1),font=("Any", 18)), sg.InputText(size=(8,1),key='lanche1'),sg.Text(" ",size=(85,1)),sg.Text(size=(13,1),key="com",justification='right',font=("Any", 18))],
-    [sg.Text('Quantidade do lanche',size=(25,1),font=("Any", 18)),sg.InputText(size=(8,1),key='qtd')],
+       [sg.Text("SEJA BEM-VINDO", size=(52, 1), justification='center', font=("Any", 35))],
+    [sg.Text('Código do Produto',size=(25,1),font=("Any", 18)), sg.InputText(size=(8,1),key='lanche1'),
+     sg.Text(" ",size=(75,1)),sg.Text(size=(23,1),key="com",justification='right',font=("Any", 18))],
+    [sg.Text('Quantidade do Produto',size=(25,1),font=("Any", 18)),sg.InputText(size=(8,1),key='qtd')],
     [sg.Button('OK',size=(30,1)),sg.Text("",size=(11,1)),
      sg.Button('DELETE',size=(30,1)),sg.Text("",size=(11,1)),sg.Button('PAGAR',size=(30,1)),
      sg.Text("",size=(12,1)),sg.Button('VOLTAR',size=(30,1))],
@@ -133,14 +135,16 @@ while True:
         break
     elif event == "Nova Compra":
         com+=1
-        window['com'].update(f'COMANDA N°{com}')
+        window['com'].update(f'CUPOM FISCAL N°{com}')
         while True:
             try:
                 event, values = window.read()
                 if event == 'OK':
                     lanche1 = values['lanche1']
                     qtd = values["qtd"]
-                    if not lanche1 or not qtd:
+                    if not lanche1 :
+                        sg.Text("Informe valores para continuar")
+                    elif not qtd:
                         sg.Text("Informe valores para continuar")
                         continue
                     else:
@@ -150,8 +154,6 @@ while True:
                             for item in dic:
                                 if item["cod"] == pro:
                                     num += 1
-
-
                                     lanche = item["lanche"]
                                     preco = item['preco'] * qtd
                                     soma2 += preco
@@ -201,10 +203,10 @@ while True:
     elif event == "Venda Total":
         total()
     elif event == "Pesquisar Produto":
-        window["com"].update("PESQuISAR PRODUTO")
+        window["com"].update("PESQUISAR PRODUTO")
         window["output"].print(f'{"CÓDIGO" :<20}                 {"PRODUTO":<20}                            {"PRECO"}')
         for lanche in dic:
-            window['output'].print(f"    {lanche['cod']:<40} {lanche['lanche']:<40} R$ {lanche['preco']:>15.2f}")
+            window['output'].print(f"    {lanche['cod']:<40} {lanche['lanche']:<65} R$ {lanche['preco']:>15.2f}")
     elif event == "VOLTAR":
         window["output"].update("")
         window["com"].update("")
@@ -212,9 +214,7 @@ while True:
     elif event == "Novo Produto":
         novo_item()
     elif event == "Ajuda":
-        sg.popup('o sistema de comandas ainda esta em desenvolvimento')
-
-
+        sg.popup("estamos em desenvolvimento")
         continue
 window.close()
 
