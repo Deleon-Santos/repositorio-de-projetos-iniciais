@@ -3,28 +3,25 @@ import PySimpleGUI as sg
 import json
 lista_produto = []
 lista1 = []
-com = 0
+com =int(0)
 cancela = []
 soma2 = 0
-num = 0
-with open('SISTEM_COMAND.txt', 'r') as adic:
+num = int(0)
+with open('comanda.txt', 'r') as adic:
     dic = json.load(adic)
 
 #=============================================================================================================
 def remover(soma2):
     try:
-        num1 = int(sg.popup_get_text('Digite o número do item'))
+        num1 =int(sg.popup_get_text('Digite o número do item'))
         sg.popup(lista1)
-        # if not values in num1:
-        #     sg.popup_error("Informe o Item")
-
 
         for lanche in lista1:
-            if lanche["Item"] in num1:
+            if lanche["Item"] == num1:
                 soma2 -= lanche["Preco"]
                 cancela.append(lanche["Preco"])
 
-                sg.popup(f'N°{lanche["Item"]}   {lanche["Lanche"]:<14}{lanche["Quantidade"]:<14} R$ {pre:.2f}')
+                sg.popup(f'N°{lanche["Item"]} {lanche["Cod"]}-{lanche["Lanche"]:<14}{lanche["Quantidade"]:<14} R$ {pre:.2f}')
                 lista1.remove(lanche)
 
         sg.popup("REMOVIDO")
@@ -66,27 +63,6 @@ def total():
     window.close()
 
 #===========================================================================================================
-def cardapio():
-    #sg.theme('DarkGrey2')
-
-
-    layout = [
-
-             [sg.Text('             BEM-VINDO AO BOCA NERVOSA', justification='center',font=("Any", 18))],
-             [sg.Text("",size=(17,1)),sg.Image(filename='matafome.png',size=(250,150))],
-             [sg.Text('CÓDIGO', size=(30, 1)), sg.Text('PRODUTO', size=(30, 1)), sg.Text('PREÇO', size=(7, 1))],
-           ]
-    for lanche in dic:
-        layout.append([sg.Text(lanche['cod'], size=(30, 1)), sg.Text(lanche['lanche'], size=(30, 1)),
-                       sg.Text(f'R$ {lanche["preco"]:.2f}', size=(7, 1))])
-
-    window = sg.Window("                                                                                CARDAPIO", layout)
-    while True:
-        event, values = window.read()
-        if event in (sg.WIN_CLOSED,"Sair"):
-            break
-
-#============================================================================================================
 def achar(lanche1):
     for lanche in dic:
         if lanche["cod"] == lanche1:
@@ -94,8 +70,49 @@ def achar(lanche1):
     sg.popup("Não Encontrado")
     return
 
+#============================================================================================================
+def novo_item():
+    #egue os itens existentes do arquivo JSON
+    with open("comanda.txt", 'r') as arquivo:
+        dic = json.load(arquivo)
+
+    layout = [
+        [sg.Text("Cadastrar Item")],
+        [sg.Text("Código:", size=(10, 1)), sg.Text("", size=(10, 1), key="codigo")],
+        [sg.Text("Produto:", size=(10, 1)), sg.InputText(key="produto")],
+        [sg.Text("Preço:", size=(10, 1)), sg.InputText(key="preco")],
+        [sg.Button("Cadastrar"), sg.Button("Sair")],
+    ]
+
+    window = sg.Window("Cadastro de Itens", layout)
+
+    while True:
+        event, values = window.read()
+
+        if event in (sg.WINDOW_CLOSED, "Sair"):
+            break
+        elif event == "Cadastrar":
+            t= len(dic) +101
+            numero=str(t)
+            window["codigo"].update(numero)
+            prod = values["produto"]
+            prec =float(values["preco"])
+            cadastro_item = {"cod": numero, "lanche": prod, "preco": prec}
+
+            # Adicione o novo item ao dicionário
+            dic.append(cadastro_item)
+
+            with open("comanda.txt", 'w') as arquivo:
+                # Grave o dicionário atualizado no arquivo
+                json.dump(dic, arquivo, indent=4)
+
+            sg.popup(cadastro_item, title="Item Cadastrado")
+
+    window.close()
+
 #===========================================================================================================
-menu_layout=[["Novo",["Nova Compra","Novo Produto","Pesquisar Produto"]],["Totais",["Venda Comanda","Venda Total"]],["Ajuda"]]
+
+menu_layout=[["Novo",["Nova Compra","Novo Produto","Pesquisar Produto"]],["Totais",["Venda Comanda","Venda Total"]],["Suporte",["Ajuda"]]]
 layout = [
     [sg.Menu(menu_layout)],
        [sg.Text("SEJA BEM-VINDO", size=(52, 1), justification='center', font=("Any", 35)), sg.Image("morto de fome.png",size=(1,1))],
@@ -133,28 +150,29 @@ while True:
                             for item in dic:
                                 if item["cod"] == pro:
                                     num += 1
+
+
                                     lanche = item["lanche"]
                                     preco = item['preco'] * qtd
                                     soma2 += preco
-                            dicionario = {'Comanda': com, 'Item': num, 'Lanche': lanche, 'Quantidade': qtd,
+                            dicionario = {'Comanda': com, 'Item': num,"Cod":pro, 'Lanche': lanche, 'Quantidade': qtd,
                                           'Preco': preco}
                             lista1.append(dicionario.copy())
 
                             for lanche in lista1:
                                 pre = lanche["Preco"]
-                            output_text = f'N°{"":<7}{lanche["Item"]} {"":>30}{lanche["Lanche"]:<18}{"":>20} {lanche["Quantidade"]:<18}{"":>18} R$ {pre:.2f}'
+                            output_text = f'N°{"":<7}{lanche["Item"]} {"":>25}{lanche["Cod"]}-{lanche["Lanche"]:<18}{"":>20} {lanche["Quantidade"]:<18}{"":>18} R$ {pre:.2f}'
                             window['output'].print(output_text)
                             window['subtotal'].update(f"SubTotal R$ {soma2:.2f}")
                             continue
                         else:
-                            sg.popup("Não encontrado")
                             continue
                 elif event == 'DELETE':
                     soma2= remover(soma2)
                     window['subtotal'].update(f"SubTotal R$ {soma2:.2f}")
                     condicao=len(cancela)
                     if condicao==1:
-                        window['output'].print(f'-R$ {cancela:.2f}'.rjust(133))
+                        window['output'].print(f'-R$ {cancela[0]:.2f}'.rjust(120))
                         cancela.clear()
                     continue
                 elif event == 'PAGAR':
@@ -170,6 +188,7 @@ while True:
                     lista1.clear()
                     soma2 = 0
                     num=0
+                    window["com"].update("")
                     window["output"].update("")
                     window["subtotal"].update("")
                     break
@@ -182,14 +201,21 @@ while True:
     elif event == "Venda Total":
         total()
     elif event == "Pesquisar Produto":
-        cardapio()
-    elif event == "Pesquisar Produto":
-        window["output"].print("o sistema de comandas ainda esta em desenvolvimento\n")
-        window["output"].print("o sistema de comandas ainda esta em desenvolvimento\n")
-        window["output"].print("o sistema de comandas ainda esta em desenvolvimento\n")
-        window["output"].print("o sistema de comandas ainda esta em desenvolvimento\n")
-        window["output"].print("o sistema de comandas ainda esta em desenvolvimento\n")
+        window["com"].update("PESQuISAR PRODUTO")
+        window["output"].print(f'{"CÓDIGO" :<20}                 {"PRODUTO":<20}                            {"PRECO"}')
+        for lanche in dic:
+            window['output'].print(f"    {lanche['cod']:<40} {lanche['lanche']:<40} R$ {lanche['preco']:>15.2f}")
+    elif event == "VOLTAR":
+        window["output"].update("")
+        window["com"].update("")
+        continue
+    elif event == "Novo Produto":
+        novo_item()
+    elif event == "Ajuda":
+        sg.popup('o sistema de comandas ainda esta em desenvolvimento')
 
+
+        continue
 window.close()
 
 

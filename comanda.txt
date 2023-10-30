@@ -1,10 +1,67 @@
-[       {"cod":"1","lanche":"xburguer","preco":10.90},
-        {"cod":"2","lanche":"xbacon  ","preco":10.90},
-        {"cod":"3","lanche":"xsalada ","preco":10.90},
-        {"cod":"4","lanche":"xtudo   ","preco":15.90},
-        {"cod":"5","lanche":"refriger","preco":6.90},
-	{"cod":"6","lanche":"paochapa","preco":5.90},
-	{"cod":"7","lanche":"carnloca","preco":15.90},
- 	{"cod":"8","lanche":"kibe    ","preco":5.90},
-        {"cod":"9","lanche":"cochinha","preco":5.90},
-	{"cod":"10","lanche":"hot-dog ","preco":5.90}]
+[
+    {
+        "cod": "101",
+        "lanche": "xburguer-",
+        "preco": 10.9
+    },
+    {
+        "cod": "102",
+        "lanche": "xbacon  -",
+        "preco": 10.9
+    },
+    {
+        "cod": "103",
+        "lanche": "xsalada -",
+        "preco": 10.9
+    },
+    {
+        "cod": "104",
+        "lanche": "xtudo   -",
+        "preco": 15.9
+    },
+    {
+        "cod": "105",
+        "lanche": "refriger-",
+        "preco": 6.9
+    },
+    {
+        "cod": "106",
+        "lanche": "paochapa-",
+        "preco": 5.9
+    },
+    {
+        "cod": "107",
+        "lanche": "carnloca-",
+        "preco": 15.9
+    },
+    {
+        "cod": "108",
+        "lanche": "kibe    -",
+        "preco": 5.9
+    },
+    {
+        "cod": "109",
+        "lanche": "cochinha-",
+        "preco": 5.9
+    },
+    {
+        "cod": "110",
+        "lanche": "hot-dog -",
+        "preco": 5.9
+    },
+    {
+        "cod": "111",
+        "lanche": "churrasco",
+        "preco": 10.9
+    },
+    {
+        "cod": "112",
+        "lanche": "chocolate",
+        "preco": 5.9
+    },
+    {
+        "cod": "113",
+        "lanche": "cocada",
+        "preco": 3.9
+    }
+]
