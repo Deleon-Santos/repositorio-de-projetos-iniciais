@@ -29,42 +29,46 @@ def remover(soma2):
 #=============================================================================================================
 def venda_cupom():
     layout = [
-        [sg.Text("VENDA POR CUPOM", size=(30, 1), justification='center', font=("Any", 18))],
-        [sg.Text("N° do Cupom Fiscal",size=(20,1)),sg.InputText(key="cupom",size=(20)),sg.Button("Pesquisar",size=(11,1))],
-        [sg.Multiline(size=(60, 10), key='output')],
-        [sg.Text("",size=(16,1)),sg.Text("",size=(9,1)), sg.Text(key="R$",font=("Any", 18))],
+        [sg.Text("VENDA POR CUPOM", size=(50, 1), justification='center', font=("Any", 18))],
+        [sg.Text("", size=(10, 1))],
+        [sg.Text("N° do Cupom Fiscal",size=(20,1)),sg.InputText(key="cupom",size=(10)),sg.Text("",size=(44,1)),sg.Button("Pesquisar",size=(11,1))],
+        [sg.Multiline(size=(100, 20), key='output')],
+        [sg.Text("",size=(58,1)),sg.Text("Total",size=(8,1),font=("Any", 18)), sg.Text(key="R$",size=(8,1),justification='right',font=("Any", 18))],
     ]
     window = sg.Window("Resumo de Vendas", layout, finalize=True)
-    window['output'].print("   N°         Produto                         Quantidade                 Valor")
+    window['output'].print("      Item       Produto                                                                        Quantidade                   Valor")
     while True:
-        event, values = window.read()
-        if event in (sg.WIN_CLOSED, "Fechar"):
-            break
-        if event == "Pesquisar":           
-            cupom=int(values["cupom"])
-            for produto in lista_produto:
-                soma=float(0)
-                if produto["Comanda"]== cupom:
-                    for lanche in lista_produto:
-                        if lanche["Comanda"] == cupom:
-                            window['output'].print(f'{"":<2} {lanche["Item"]:<10} {lanche["Cod"]}-{lanche["Lanche"]:<30} {lanche["Quantidade"]:<10}{"":<10} R$ {lanche["Preco"]:.2f}')
-                            soma+=lanche["Preco"]
+        try:
+            event, values = window.read()
+            if event in (sg.WIN_CLOSED, "Fechar"):
+                break
+            elif event == "Pesquisar":           
+                cupom=int(values["cupom"])
+                for produto in lista_produto:
+                    soma=float(0)
+                    if produto["Comanda"]== cupom:
+                    
+                        window['output'].print(f'{"":<4}  N°{lanche["Item"]:<8} {lanche["Cod"]} - {lanche["Ean"]} - {lanche["Lanche"]:<40} {lanche["Quantidade"]}') #R$ {lanche["Preco"]:.2f}')
+                        window['output'].print(f'R$ {lanche["Preco"]:.2f}'.rjust(140))
+                        window["output"].print("      ======================================================================")
+                        soma+=lanche["Preco"]
                     window["R$"].update(f"R$ {soma:.2f}")
-                    break
-                else:
-                    sg.popup("Pesquisar outro Cupom?")
-        continue           
+                sg.Text("Informe um cupom para continuar")
+                continue
+                
+        except: 
+            sg.Text("Informe um cupom para continuar")           
     window.close()
 
 #===========================================================================================================
 def total():
     layout = [
-        [sg.Text("VENDA TOTAL DO DIA", size=(30, 1), justification='center', font=("Any", 18))],
-        [sg.Multiline(size=(60, 10), key='output')],
-        [sg.Text("",size=(16,1)),sg.Text(key="qtd",font=("Any", 18)),sg.Text("",size=(9,1)), sg.Text(key="R$",font=("Any", 18))],
+        [sg.Text("VENDA TOTAL DO DIA", size=(50, 1), justification='center', font=("Any", 18))],
+        [sg.Multiline(size=(100, 20), key='output')],
+        [sg.Text("",size=(56,1)),sg.Text(key="qtd",font=("Any", 18)),sg.Text("",size=(9,1)), sg.Text(key="R$",justification='center',font=("Any", 18))],
     ]
     window = sg.Window("Resumo de Vendas", layout, finalize=True)
-    window['output'].print("     Produto                             Quantidade                            Valor")
+    window['output'].print("      Produto                                                                                       Quantidade                Valor")
     qtd_t = 0
     som_t = 0
     for l in dic:
@@ -74,10 +78,13 @@ def total():
         for lanche in lista_produto:
             if lanche["Lanche"] == produto:
                 qtd += lanche["Quantidade"]
+                cod=lanche["Cod"]
+                ean=lanche["Ean"]
                 somas += lanche["Preco"]
         if qtd > 0:
-            window['output'].print(f'{"":<2} {produto:<10}', end="    ")
-            window['output'].print(f' {qtd:>30}                                R$ {somas:.2f}'.rjust(60))
+            window['output'].print(f'{"":<5} {cod} - {ean} - {produto:<10}{qtd:>30}')
+            window['output'].print(f'                                 R$ {somas:.2f}'.rjust(140))
+            window["output"].print("      ======================================================================")
             qtd_t += qtd
             som_t += somas
     window['qtd'].print(f'Qtd {qtd_t}')
@@ -94,10 +101,12 @@ import PySimpleGUI as sg
 def pagar(soma2):
     layout = [
         [sg.Text("CONDIÇÃO DE PAGAMENTO", size=(35, 1), justification='center', font=("Any", 18))],
-        [sg.Text("TOTAL DA COMPRA ", size=(18, 1) ,font=("Any", 18)), sg.Text(f"R$ {soma2:.2f}", size=(18, 1),justification='right', key="valor", font=("Any", 18))],
-        [sg.Text("VALOR RECEBIBO ", size=(18, 1), font=("Any", 18)), sg.Text(f'0.00', size=(18, 1), key="recebido",justification='right', font=("Any", 18))],
-        [sg.Text("TROCO DEVOLVIDO ", size=(18, 1), font=("Any", 18)), sg.Text(f'0.00', size=(18, 1), key="R$",justification='right', font=("Any", 18))],
-        [sg.Button('CARTAO', size=(20, 1)), sg.Button('PIX', size=(20, 1)), sg.Button('DINHEIRO', size=(20, 1))],
+        [sg.Text("", size=(10, 1))],
+        [sg.Text("Valor Total da Compra ", size=(28, 1) ,font=("Any",12)), sg.Text(f"R$ {soma2:.2f}", size=(18, 1),justification='right', key="valor", font=("Any", 18))],
+        [sg.Text("Valor Recebido ", size=(28, 1), font=("Any", 12)), sg.Text(f'R$ 0.00', size=(18, 1), key="recebido",justification='right', font=("Any", 18))],
+        [sg.Text("Troco Devolvido ", size=(28, 1), font=("Any", 12)), sg.Text(f'R$ 0.00', size=(18, 1), key="R$",justification='right', font=("Any", 18))],
+        [sg.Text("", size=(10, 1))],
+        [sg.Text("", size=(20, 1)),sg.Button('CARTAO', size=(20, 1)), sg.Button('PIX', size=(20, 1)), sg.Button('DINHEIRO', size=(20, 1))],
         #[sg.Text("",size=(20)),sg.Button('Sair', size=(20, 1))],
     ]
 
@@ -115,7 +124,7 @@ def pagar(soma2):
 
         elif event in ("CARTAO", "PIX"):
             soma2 = 0
-            window["valor"].update(f"R$ {soma2:.2f}")
+            
             
             sg.popup("Pagamento efetuado com sucesso")
             return soma2
@@ -129,7 +138,7 @@ def pagar(soma2):
                     troco = dinheiro - soma2
                     window["R$"].update(f"R$ {troco:.2f}")
                     soma2 = 0
-                    window["valor"].update(f"R$ {soma2:.2f}")
+                    
                     sg.popup("Pagamento efetuado com sucesso")
                     return soma2
                     
@@ -158,11 +167,13 @@ def novo_item():
         dic = json.load(arquivo)
 
     layout = [
-        [sg.Text("Cadastrar Item")],
+        [sg.Text("CADASTRAR ITEM", size=(35, 1), justification='center', font=("Any", 18))],
+        [sg.Text("", size=(20, 1))],
         [sg.Text("Código:", size=(10, 1)), sg.Text("", size=(10, 1), key="codigo")],
-        [sg.Text("Produto:", size=(10, 1)), sg.InputText(key="produto")],
-        [sg.Text("Preço:", size=(10, 1)), sg.InputText(key="preco")],
-        [sg.Button("Cadastrar"), sg.Button("Sair")],
+        [sg.Text("Produto:", size=(10, 1)), sg.InputText(key="produto",size=(25,1),font=("Any",18))],
+        [sg.Text("Preço:", size=(10, 1)), sg.InputText(key="preco",size=(25,1),font=("Any",18))],
+        [sg.Text("", size=(20, 1))],
+        [sg.Text("", size=(17, 1)),sg.Button("Cadastrar",size=(11, 1)), sg.Button("Sair",size=(11, 1))],
     ]
 
     window = sg.Window("Cadastro de Itens", layout)
@@ -173,10 +184,12 @@ def novo_item():
         elif event == "Cadastrar":
             t= len(dic) +101
             numero=str(t)
+            ean=7890000000000+t
+            ean=str(ean)
             window["codigo"].update(numero)
             prod = values["produto"]
             prec =float(values["preco"])
-            cadastro_item = {"cod": numero, "lanche": prod, "preco": prec}
+            cadastro_item = {"cod": numero,"ean":ean, "lanche": prod, "preco": prec}
             # Adicione o novo item ao dicionário
             dic.append(cadastro_item)
             with open("comanda.txt", 'w') as arquivo:
@@ -234,18 +247,19 @@ while True:
                             for item in dic:
                                 if item["cod"] == pro:
                                     num += 1
+                                    ean=item["ean"]
                                     lanche = item["lanche"]
                                     preco = item['preco'] * qtd
                                     soma2 += preco
-                            dicionario = {'Comanda': com, 'Item': num,"Cod":pro, 'Lanche': lanche, 'Quantidade': qtd,
+                            dicionario = {'Comanda': com, 'Item': num,"Cod":pro,"Ean":ean, 'Lanche': lanche, 'Quantidade': qtd,
                                           'Preco': preco}
                             lista1.append(dicionario.copy())
 
                             for lanche in lista1:
                                 pre = lanche["Preco"]
-                            window['output'].print(f'"     " N°{"":<7}{lanche["Item"]}{"":>25}{lanche["Cod"]}-{lanche["Lanche"]:<18}{"":>20} {lanche["Quantidade"]:<18}')
-                            window['output'].print(f'"     "R$ {pre:.2f}'.rjust(92))
-                            window["output"].print("'     '==============================================")
+                            window['output'].print(f'       N°{"":<7}{lanche["Item"]}{"":>15}{lanche["Cod"]} - {lanche["Ean"]} - {lanche["Lanche"]:<18}{"":>20} {lanche["Quantidade"]:<18}')
+                            window['output'].print(f'R$ {pre:.2f}'.rjust(140))
+                            window["output"].print("      ======================================================================")
                             window['subtotal'].update(f"{soma2:.2f}")
                             window["descricao"].update(f"{lanche['Lanche']}")
                             continue
@@ -289,21 +303,32 @@ while True:
                 sg.popup('Entre com um valor numérico')
                 continue
     elif event == "Venda Total":
+        window["com"].update("")
+        window["output"].update("")
         total()
     elif event == "Pesquisar Produto":
         window["com"].update("PESQUISAR PRODUTO")
-        window["output"].print(f'{"CÓDIGO" :<20}                 {"PRODUTO":<60}          {"PRECO"}')
+        window["output"].print(f'{"      CÓDIGO" :<10}                      {"PRODUTO":<60}                      {"PRECO"}')
         for lanche in dic:
-            window['output'].print(f"    {lanche['cod']:<40} {lanche['lanche']:<60} R$ {lanche['preco']:>10.2f}")
+            window['output'].print(f'      {lanche["cod"]} - {lanche["ean"]} - {lanche["lanche"]:<18}{"":>20} ')
+            window['output'].print(f'R$ {lanche["preco"]:.2f}'.rjust(140))
+            window["output"].print("      ======================================================================")
+            #window['output'].print(f"    {lanche['cod']:<40} {lanche['lanche']:<60} R$ {lanche['preco']:>10.2f}")
     elif event == "VOLTAR":
         window["output"].update("")
         window["com"].update("")
         continue
     elif event == "Novo Produto":
+        window["com"].update("")
+        window["output"].update("")
         novo_item()
     elif event == "Venda Cupom":
+        window["com"].update("")
+        window["output"].update("")
         venda_cupom()
     elif event == "Data":
+        window["com"].update("")
+        window["output"].update("")
         data=sg.popup_get_text("Data")
         window["data"].update(f'{data}')
     elif event == "Ajuda":
