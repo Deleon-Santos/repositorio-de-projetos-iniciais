@@ -106,5 +106,11 @@
         "ean": "7890000000118",
         "lanche": "Refresco tang de laranja 35g-",
         "preco": 1.28
+    },
+    {
+        "cod": "119",
+        "ean": "7890000000119",
+        "lanche": "Azeite de oliva andorinh 500ml",
+        "preco": 31.9
     }
 ]
