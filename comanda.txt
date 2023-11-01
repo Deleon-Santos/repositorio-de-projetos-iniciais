@@ -63,5 +63,10 @@
         "cod": "113",
         "lanche": "cocada",
         "preco": 3.9
+    },
+    {
+        "cod": "114",
+        "lanche": "mistoquent",
+        "preco": 6.9
     }
 ]
