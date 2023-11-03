@@ -7,34 +7,36 @@ com =int(0)
 cancela = []
 soma2 = 0
 num = int(0)
-with open('comanda.txt', 'r') as adic:#comanco para ler o Aquivo.txt com os dados os produtos
+with open('comanda.txt', 'r') as adic:#comando para ler o Aquivo.txt com os dados dos produtos
     dic = json.load(adic)
 
 
 # =============================================================================================================
 def remover(soma2):
-    try:
-        num1 = int(sg.popup_get_text('Digite o número do item'))
+    try:# leia a lista1 e encontre o item informado
+        remove = int(sg.popup_get_text('Remover o Item',font=("Any", 18)))
         for lanche in lista1:
-            if lanche["Item"] == num1:
+            if lanche["Item"] == remove:
                 soma2 -= lanche["Preco"]
                 cancela.append(lanche["Preco"])
                 sg.popup(
-                    f'N°{lanche["Item"]}                                {lanche["Cod"]}-{lanche["Lanche"]:<14}{lanche["Quantidade"]:<14} R$ {pre:.2f}')
-                lista1.remove(lanche)
-
+                    f'N°{lanche["Item"]} {lanche["Cod"]}-{lanche["Lanche"]} {lanche["Quantidade"]} R$ {pre:.2f}',font=("Any", 18))
+                lista1.remove(lanche)#rmova o item da lista1
         return soma2
     except:
-        sg.popup("Não encontrado")
+        sg.popup("Não Encontrado",font=("Any", 18))
         return soma2
 
 
 # =============================================================================================================
 def venda_cupom():
-    layout = [
+    layout_menu=[
+        ["Menu",["Todos"]],
+    ]
+    layout = [[sg.Menu(layout_menu)],
         [sg.Text("VENDA POR CUPOM", size=(50, 1), justification='center', font=("Any", 18))],
         [sg.Text("", size=(10, 1))],
-        [sg.Text("N° do Cupom Fiscal", size=(20, 1)), sg.InputText(key="cupom", size=(10)), sg.Text("", size=(44, 1)),
+        [sg.Text("N° do Cupom Fiscal", size=(20, 1)), sg.InputText(background_color='White',key="cupom", size=(10)), sg.Text("", size=(44, 1)),
          sg.Button("Pesquisar", size=(11, 1))],
         [sg.Multiline(size=(100, 20), key='output')],
         [sg.Text("", size=(58, 1)), sg.Text("Total", size=(8, 1), font=("Any", 18)),
@@ -48,18 +50,34 @@ def venda_cupom():
             event, values = window.read()
             if event in (sg.WIN_CLOSED, "Fechar"):
                 break
-            
+            elif event == "Todos":
+                window['output'].update("")
+                soma_total = 0
+                for cupom in set(item["Comanda"] for item in lista_produto):#passa por todos os cupons e todos os itens
+                    soma = 0
+                    window['output'].print(f'{"":<4}  CUPOM N° {cupom}')
+                    for lanche in lista_produto:
+                        if lanche["Comanda"] == cupom:
+                            window['output'].print(f'{"":<4}  N°{lanche["Item"]:<8} {lanche["Cod"]} - {lanche["Ean"]} - {lanche["Lanche"]:<40} {lanche["Quantidade"]}')
+                            window['output'].print(f'R$ {lanche["Preco"]:.2f}'.rjust(140))
+                            window["output"].print("      ======================================================================")
+                            soma += lanche["Preco"]
+                    window['output'].print(f'"R$ {soma:.2f}'.rjust(140))
+                    window["output"].print("      ======================================================================")
+                    soma_total += soma
+                window["R$"].update(f"R$ {soma_total:.2f}")#soma todo os itens 
+
+
             elif event == "Pesquisar":
                 cupom = values["cupom"]
                 
-                if not cupom:
-                    sg.Text("Informe um cupom para continuar")
+                if not cupom:#verifica se tem valor em cupom
+                    sg.Text("Informe o N° do Cupom",font=("Any", 18))
                 else:
-                    cupom=int(cupom)
+                    cupom=int(cupom)#para esse cupom, todos os itens
                     for produto in lista_produto:
                         if produto["Comanda"] == cupom:
                             soma = 0
-                            comand=cupom
                             if produto["Comanda"]== cupom:
                                 window['output'].update("")
                                 window['output'].print(f'{"":<4}  CUPOM N° {cupom}')
@@ -72,8 +90,7 @@ def venda_cupom():
                                 window["R$"].update(f"R$ {soma:.2f}")
                                 break
                             else:
-                                sg.popup("Pesquisar outro Cupom?",font=("Any", 18))
-                            
+                                sg.popup("Pesquisar outro Cupom?",font=("Any", 18))             
         except:
             sg.Text("Informe o N° de Cupom",font=("Any", 18))
     window.close()
@@ -92,7 +109,7 @@ def total():
         "      Produto                                                                                       Quantidade                Valor")
     qtd_t = 0
     som_t = 0
-    for l in dic:
+    for l in dic:#passa por todos os cupons e todos os iten
         produto = l["lanche"]
         qtd = 0
         somas = 0
@@ -108,8 +125,8 @@ def total():
             window["output"].print("      ======================================================================")
             qtd_t += qtd
             som_t += somas
-    window['qtd'].print(f'Qtd {qtd_t}')
-    window['R$'].print(f'R$ {som_t:.2f}')
+    window['qtd'].print(f'Qtd {qtd_t}')#pega a quantidade total
+    window['R$'].print(f'R$ {som_t:.2f}')#pega o valor total
     while True:
         event, values = window.read()
         if event in (sg.WIN_CLOSED, "Fechar"):
@@ -145,8 +162,8 @@ def pagar(soma2):
             sg.popup("Cancelar forma de Pagamento",font=("Any", 18))
             return soma2
 
-        elif event in ("CARTAO", "PIX"):
-            if soma2>0:
+        elif event in ("CARTAO", "PIX"):#para cartão e pix o valor e descontado itegralmente
+            if soma2>0:#somente se o subtotal existir e for maior que "0"
                 soma2 = 0
                 window["valor"].update(f"R$ {soma2:.2f}")
                 window["recebido"].update(f"R$ {pago:.2f}")
@@ -157,7 +174,7 @@ def pagar(soma2):
         elif event == "DINHEIRO":
             try:
                 dinheiro = sg.popup_get_text("Valor Recebido",font=("Any", 18))
-                if dinheiro is not None:
+                if dinheiro is not None:#verifica se tem valores
                     dinheiro = float(dinheiro)
                     if dinheiro >= soma2:
                         troco = dinheiro - soma2
@@ -167,7 +184,7 @@ def pagar(soma2):
                         window["R$"].update(f"R$ {troco:.2f}")
                         
                         sg.popup("Pagamento efetuado com sucesso",font=("Any", 18))
-                        return soma2
+                        return soma2#desconta o subtotal e retorna o troco
                         break
                     else:
                         sg.popup("Valor Insuficiente",font=("Any", 18))
@@ -186,14 +203,14 @@ def pagar(soma2):
 def achar(lanche1):
     for lanche in dic:
         if lanche["cod"] == lanche1:
-            return lanche["cod"]
-    sg.popup("Não Encontrado")
+            return lanche["cod"]#busca o produto dentro do cadastro
+    sg.popup("Não Encontrado",title="Produto",font=("Any", 18))
     return
 
 
 # ============================================================================================================
 def novo_item():
-    # egue os itens existentes do arquivo JSON
+    # abre os itens existentes do arquivo JSON
     with open("comanda.txt", 'r') as arquivo:
         dic = json.load(arquivo)
 
@@ -201,32 +218,37 @@ def novo_item():
         [sg.Text("CADASTRAR ITEM", size=(35, 1), justification='center', font=("Any", 18))],
         [sg.Text("", size=(20, 1))],
         [sg.Text("Código:", size=(10, 1)), sg.Text("", size=(10, 1), key="codigo")],
-        [sg.Text("Produto:", size=(10, 1)), sg.InputText(key="produto", size=(25, 1), font=("Any", 18))],
-        [sg.Text("Preço:", size=(10, 1)), sg.InputText(key="preco", size=(25, 1), font=("Any", 18))],
+        [sg.Text("Produto:", size=(10, 1)), sg.InputText(background_color='White',key="produto", size=(25, 1), font=("Any", 18))],
+        [sg.Text("Preço:", size=(10, 1)), sg.InputText(background_color='White',key="preco", size=(25, 1), font=("Any", 18))],
         [sg.Text("", size=(20, 1))],
         [sg.Text("", size=(17, 1)), sg.Button("Cadastrar", size=(11, 1)), sg.Button("Sair", size=(11, 1))],
     ]
 
     window = sg.Window("Cadastro de Itens", layout)
     while True:
-        event, values = window.read()
-        if event in (sg.WINDOW_CLOSED, "Sair"):
+        try:
+            event, values = window.read()
+            if event in (sg.WINDOW_CLOSED, "Sair"):
+                break
+            elif event == "Cadastrar":
+                t = len(dic) + 101#conta os itens e adiciona "101"
+                numero = str(t)
+                ean = 7890000000000 + t
+                ean = str(ean)#converte o inteiro em str concatenendo o codigo gerado
+                window["codigo"].update(numero)
+                prod = values["produto"]
+                prec = float(values["preco"])
+                cadastro_item = {"cod": numero, "ean": ean, "lanche": prod, "preco": prec}
+                # Adicione o novo item ao dicionário
+                dic.append(cadastro_item)
+                with open("comanda.txt", 'w') as arquivo:
+        
+            
+                    json.dump(dic, arquivo, indent=4)
+            sg.popup(cadastro_item, title="Item Cadastrado", font=("Any",18))
             break
-        elif event == "Cadastrar":
-            t = len(dic) + 101
-            numero = str(t)
-            ean = 7890000000000 + t
-            ean = str(ean)
-            window["codigo"].update(numero)
-            prod = values["produto"]
-            prec = float(values["preco"])
-            cadastro_item = {"cod": numero, "ean": ean, "lanche": prod, "preco": prec}
-            # Adicione o novo item ao dicionário
-            dic.append(cadastro_item)
-            with open("comanda.txt", 'w') as arquivo:
-     
-                json.dump(dic, arquivo, indent=4)
-            sg.popup(cadastro_item, title="Item Cadastrado")
+        except ValueError:
+            sg.popup("Informe valor numerico",title="Preço", font=("Any",18))
     window.close()
 
 
@@ -237,10 +259,10 @@ def limpar_saida():
     window["output"].update("")
     window["subtotal"].update("")
     window["descricao"].update("")
+#limpa os campos sempre que uma nova função e chamada
 
-
-# ===========================================================================================================
-sg.theme("Dark Amber")
+# ===================================== Inicio do programa principal======================================================================
+sg.theme("LightBlue3")
 
 menu_layout = [["Novo", ["Nova Compra", "Novo Produto", "Pesquisar Produto"]],
                ["Totais", ["Venda Cupom", "Venda Total"]], ["Suporte", ["Ajuda", "Data"]]]
@@ -250,7 +272,7 @@ layout = [
     [sg.Text("CAIXA ABERTO", size=(70, 1), justification='center', font=("Any", 50))],
     [sg.Text('Quantidade do Produto', size=(25, 1), font=("Any", 18)), sg.InputText("1", size=(8, 1), key='qtd', font=("Any", 15)),
      sg.Text(" ", size=(73, 1)), sg.Text(size=(23, 1), key="com", justification='right', font=("Any", 18))],
-    [sg.Text('Código do Produto', size=(25, 1), font=("Any", 18)), sg.InputText(size=(8, 1), key='lanche1' ,font=("Any", 15)),
+    [sg.Text('Código do Produto', size=(25, 1), font=("Any", 18)), sg.InputText( background_color='White',size=(8, 1), key='lanche1' ,font=("Any", 15)),
      sg.InputText(size=(45, 1), key='descricao',font=("Any", 15))],
     [sg.Button('OK', size=(30, 1)), sg.Text("", size=(11, 1)),
      sg.Button('DELETE', size=(30, 1)), sg.Text("", size=(11, 1)), sg.Button('PAGAR', size=(30, 1)),
@@ -267,26 +289,30 @@ window = sg.Window("NOVO PEDIDO", layout, resizable=True)
 while True:
     event, values = window.read()
     if event in (sg.WIN_CLOSED, "Fechar"):
-        sg.popup("ENCERRAR")
+        #sg.popup("ENCERRAR",font=("Any", 18))
         break
     elif event == "Nova Compra":
         com +=1
         window['com'].update(f'CUPOM FISCAL N°{com}')
         window['subtotal'].update(f'R$ {soma2:.2f}')
         window["output"].update("")
+        #dentro deste bloco de eventos serão registrados apenas os botoes (OK,DELETE,PAGAR,VOLTAR)
         while True:
             try:
                 event, values = window.read()
                 if event == 'OK':
+                    #verifica se ha valores nos vcampos de produto e quantidade
                     lanche1 = values['lanche1']
                     qtd = values["qtd"]
                     if not lanche1:
-                        sg.Text("Informe valores para continuar")
+                        sg.Text("Informe valores para continuar",title="Produto",font=("Any", 18))
+                        continue
                     elif not qtd:
-                        sg.Text("Informe valores para continuar")
+                        sg.Text("Informe valores para continuar",title="Quantidade",font=("Any", 18))
                         continue
                     else:
                         pro = achar(lanche1)
+                        #recebe o codigo e integra o produto ao dicionario e lista local
                         if pro == lanche1:
                             qtd = int(qtd)
                             for item in dic:
@@ -300,7 +326,7 @@ while True:
                                           'Quantidade': qtd,
                                           'Preco': preco}
                             lista1.append(dicionario.copy())
-
+                            #escreve os valores na tela de output
                             for lanche in lista1:
                                 pre = lanche["Preco"]
                             window['output'].print(
@@ -317,12 +343,14 @@ while True:
                     soma2 = remover(soma2)
                     window['subtotal'].update(f"R$ {soma2:.2f}")
                     condicao = len(cancela)
+                    #condição para mostra o valor estornado
                     if condicao == 1:
                         window['output'].print(f'-R$ {cancela[0]:.2f}'.rjust(140))
                         window["output"].print("      ======================================================================")
                         cancela.clear()
                     continue
                 elif event == 'PAGAR':
+                    #condição para conciderar o cupom com "pago"
                     soma2 = pagar(soma2)
                     if soma2 ==float(0):
                         lista_produto.extend(lista1)
@@ -331,7 +359,7 @@ while True:
                         break
                     else:
                         continue
-                elif event == "VOLTAR":
+                elif event == "VOLTAR":#limpa todos os valores e lista local
                     lista1.clear()
                     limpar_saida()
                     soma2 = 0
@@ -339,15 +367,15 @@ while True:
                     num = 0
                     break
                 elif event == (sg.WIN_CLOSED):
-                    sg.popup("ENCERRAR")
+                    sg.popup("ENCERRAR",font=("Any",18))
                     break
-            except ValueError:
-                sg.popup('Entre com um valor numérico')
+            except ValueError:#trata erro de valor não numerico
+                sg.popup('Entre com um valor numérico',title="Erro em Quantidade",font=("Any",18))
                 continue
     elif event == "Venda Total":
         limpar_saida()
         total()
-    elif event == "Pesquisar Produto":
+    elif event == "Pesquisar Produto":#mostra todos os produtos cadastrados
         window["com"].update("PESQUISAR PRODUTO")
         window["output"].print(
             f'{"      CÓDIGO" :<10}                      {"PRODUTO":<60}                      {"PRECO"}')
@@ -366,14 +394,16 @@ while True:
         venda_cupom()
     elif event == "Data":
         limpar_saida()
-        data = sg.popup_get_date("Data")
-        window["data"].update(f'{data}')
+        data = sg.popup_get_text("Data",font=("Any",18))
+        if data:#permite inserir uma data atual ao sistema
+            window["data"].update(f'{data}')
+        
     elif event == "Ajuda":
         sg.popup_scrolled("Sistema em desenvolvimento, algumas funcionalidades podem apresentar erros\n"
                           " e falhas inesperadas, caso ocorram problemas reportem ao desenvolvedor \n"
                           "atraves do contato disponivel pra que as correções seja incorporadas ao codigo\n"
                  "Em brevo apresentaremos uma bibliotca. Aguardem!\n"
-                 "delps.santos1987@gmail.com , linkedin.com/in/deleon-santos-1b835a290")
+                 "delps.santos1987@gmail.com , linkedin.com/in/deleon-santos-1b835a290",title="Ajuda")
         continue
 window.close()
 

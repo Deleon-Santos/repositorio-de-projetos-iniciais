@@ -116,7 +116,19 @@
     {
         "cod": "120",
         "ean": "7890000000120",
-        "lanche": "carne seca desidratada 500g",
+        "lanche": "Carne seca traseiro pc 500g",
         "preco": 30.0
+    },
+    {
+        "cod": "121",
+        "ean": "7890000000121",
+        "lanche": "macarrao instataneo nissin 500",
+        "preco": 3.0
+    },
+    {
+        "cod": "122",
+        "ean": "7890000000122",
+        "lanche": "milharina",
+        "preco": 2.9
     }
 ]
