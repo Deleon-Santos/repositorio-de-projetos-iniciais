@@ -129,6 +129,24 @@
         "cod": "122",
         "ean": "7890000000122",
         "lanche": "milharina",
+        "preco": 3.9
+    },
+    {
+        "cod": "123",
+        "ean": "7890000000123",
+        "lanche": "salshicha",
         "preco": 2.9
+    },
+    {
+        "cod": "124",
+        "ean": "7890000000124",
+        "lanche": "agua mineral bonafot",
+        "preco": 10.3
+    },
+    {
+        "cod": "125",
+        "ean": "7890000000125",
+        "lanche": "Leite condensado mo\u00e7a  390g",
+        "preco": 8.3
     }
 ]

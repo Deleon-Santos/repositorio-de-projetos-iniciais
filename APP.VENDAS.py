@@ -231,22 +231,32 @@ def novo_item():
             if event in (sg.WINDOW_CLOSED, "Sair"):
                 break
             elif event == "Cadastrar":
-                t = len(dic) + 101#conta os itens e adiciona "101"
-                numero = str(t)
-                ean = 7890000000000 + t
-                ean = str(ean)#converte o inteiro em str concatenendo o codigo gerado
-                window["codigo"].update(numero)
                 prod = values["produto"]
-                prec = float(values["preco"])
-                cadastro_item = {"cod": numero, "ean": ean, "lanche": prod, "preco": prec}
-                # Adicione o novo item ao dicionário
-                dic.append(cadastro_item)
-                with open("comanda.txt", 'w') as arquivo:
-        
+                if len(prod) > 25:
+                    sg.popup_scrolled("A descrição nao deve ser maior que o campo input\nDescreva o item com ate 25 caracteres")
+                    continue
+                else:
+                
+                    t = len(dic) + 101#conta os itens e adiciona "101"
+                    numero = str(t)
+                    ean = 7890000000000 + t
+                    ean = str(ean)#converte o inteiro em str concatenendo o codigo gerado
+                    window["codigo"].update(numero)
+                    #prod = values["produto"]
+                    prec = float(values["preco"])
+                    cadastro_item = {"cod": numero, "ean": ean, "lanche": prod, "preco": prec}
+                    # Adicione o novo item ao dicionário
+                    dic.append(cadastro_item)
+                    with open("comanda.txt", 'w') as arquivo:
             
-                    json.dump(dic, arquivo, indent=4)
-            sg.popup(cadastro_item, title="Item Cadastrado", font=("Any",18))
-            break
+                
+                        json.dump(dic, arquivo, indent=4)
+                #sg.popup_scrolled(*cadastro_item, title="Item Cadastrado", font=("Any",18))
+                item_str = f"Código: {cadastro_item['cod']} - {cadastro_item['ean']}\nLanche: {cadastro_item['lanche']}\nPreço: R${cadastro_item['preco']:.2f}"
+
+                # Exiba os dados formatados com sg.popup_scrolled
+                sg.popup_scrolled(item_str, title="Item Cadastrado", font=("Any", 18))
+                break
         except ValueError:
             sg.popup("Informe valor numerico",title="Preço", font=("Any",18))
     window.close()
@@ -254,7 +264,8 @@ def novo_item():
 
 # ===========================================================================================================
 def limpar_saida():
-    lista1.clear()                    
+    lista1.clear()  
+    window['caixa'].update('CAIXA FECHADO')                  
     window["com"].update("")
     window["output"].update("")
     window["subtotal"].update("")
@@ -269,7 +280,7 @@ menu_layout = [["Novo", ["Nova Compra", "Novo Produto", "Pesquisar Produto"]],
 layout = [
     [sg.Menu(menu_layout)],
     [],
-    [sg.Text("CAIXA ABERTO", size=(70, 1), justification='center', font=("Any", 50))],
+    [sg.Text("CAIXA FECHADO", size=(70, 1), key='caixa', justification='center', font=("Any", 50))],
     [sg.Text('Quantidade do Produto', size=(25, 1), font=("Any", 18)), sg.InputText("1", size=(8, 1), key='qtd', font=("Any", 15)),
      sg.Text(" ", size=(73, 1)), sg.Text(size=(23, 1), key="com", justification='right', font=("Any", 18))],
     [sg.Text('Código do Produto', size=(25, 1), font=("Any", 18)), sg.InputText( background_color='White',size=(8, 1), key='lanche1' ,font=("Any", 15)),
@@ -294,6 +305,7 @@ while True:
     elif event == "Nova Compra":
         com +=1
         window['com'].update(f'CUPOM FISCAL N°{com}')
+        window['caixa'].update('CAIXA ABERTO')
         window['subtotal'].update(f'R$ {soma2:.2f}')
         window["output"].update("")
         #dentro deste bloco de eventos serão registrados apenas os botoes (OK,DELETE,PAGAR,VOLTAR)
@@ -399,12 +411,32 @@ while True:
             window["data"].update(f'{data}')
         
     elif event == "Ajuda":
-        sg.popup_scrolled("Sistema em desenvolvimento, algumas funcionalidades podem apresentar erros\n"
-                          " e falhas inesperadas, caso ocorram problemas reportem ao desenvolvedor \n"
-                          "atraves do contato disponivel pra que as correções seja incorporadas ao codigo\n"
-                 "Em brevo apresentaremos uma bibliotca. Aguardem!\n"
-                 "delps.santos1987@gmail.com , linkedin.com/in/deleon-santos-1b835a290",title="Ajuda")
-        continue
+            sg.popup_scrolled(" Sistema em desenvolvimento, algumas funcionalidades  podem  apresentar erros\n"+
+                            "e falhas inesperadas, caso ocorram problemas reportem ao desenvolvedor  atraves\n"+
+                            "do contato disponivel pra que as correções seja incorporadas ao codigo.Em brevo\n"+
+                            "apresentaremos uma bibliotca. Aguardem!\n"+
+                            "delps.santos1987@gmail.com , linkedin.com/in/deleon-santos-1b835a290\n"+
+                            "\n"+
+                            "PRIMEIROS PASSOS EM APP_VENDAS\n"+
+                            "\n"+
+                            "-Novo>\n"+
+                            "  -Pesqisar Produto: Pesquisa todos os produtos cadastrados ate o ultimo login.\n"+
+                            "  -Novo Produto:Cadastra um novo produto no banco de dados(OBS:o novo item sera\n"+
+                            "   exibido no proximo login).\n"+
+                            "  -Nova Compra: Habilita o numero de cupom e inicia a tela de registro.\n"+
+                            "       -Botão OK: Confirma a escolha do item selacionado na entrada de produto.\n"+
+                            "       -Botão DELETE: Permite excluir um item da seu carrinho de compra. \n"+
+                            "       -Botão PAGAR: Permite pagar o sub total do carrinho de compra. \n"+
+                            "       -Botão VOLTAR: Permite cancelar o cupon ou sair de qualquer menu do APP.\n"+
+                            "\n"+
+                            "-Totais>\n"+
+                            "   -Venda Cupon: Permite consultar por numero de cupon ou todos os cupons\n"+
+                            "   -Venda Total: Permite ver a venda total por item, valores  e total de  venda\n"+
+                            "\n"+
+                            "-Suporte>"+
+                            "   -Ajuda: Retorna um menu minimalista com as principais funcionalidades de app\n"+
+                            "   -Data: permite alterar a data no sistema",title='Ajuda')
+            continue
 window.close()
 
 #
