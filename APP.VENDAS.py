@@ -2,7 +2,7 @@
 import PySimpleGUI as sg
 import json
 lista_produto = []
-lista1 = []
+carrinho = []
 com =int(0)
 cancela = []
 soma2 = 0
@@ -15,13 +15,13 @@ with open('comanda.txt', 'r') as adic:#comando para ler o Aquivo.txt com os dado
 def remover(soma2):
     try:# leia a lista1 e encontre o item informado
         remove = int(sg.popup_get_text('Remover o Item',font=("Any", 18)))
-        for lanche in lista1:
+        for lanche in carrinho:
             if lanche["Item"] == remove:
                 soma2 -= lanche["Preco"]
                 cancela.append(lanche["Preco"])
                 sg.popup(
                     f'N°{lanche["Item"]} {lanche["Cod"]}-{lanche["Lanche"]} {lanche["Quantidade"]} R$ {pre:.2f}',font=("Any", 18))
-                lista1.remove(lanche)#rmova o item da lista1
+                carrinho.remove(lanche)#rmova o item da lista1
         return soma2
     except:
         sg.popup("Não Encontrado",font=("Any", 18))
@@ -65,7 +65,7 @@ def venda_cupom():
                     window['output'].print(f'"R$ {soma:.2f}'.rjust(140))
                     window["output"].print("      ======================================================================")
                     soma_total += soma
-                window["R$"].update(f"R$ {soma_total:.2f}")#soma todo os itens 
+                window["R$"].update(f"R$ {soma_total:.2f}")#soma total
 
 
             elif event == "Pesquisar":
@@ -89,10 +89,10 @@ def venda_cupom():
                                         soma+=lanche["Preco"]
                                 window["R$"].update(f"R$ {soma:.2f}")
                                 break
-                            else:
-                                sg.popup("Pesquisar outro Cupom?",font=("Any", 18))             
+                        else:
+                            sg.popup("Não Encontrado",font=("Any", 18))
         except:
-            sg.Text("Informe o N° de Cupom",font=("Any", 18))
+            sg.Text("Não Encontrado!",font=("Any", 18))
     window.close()
 
 
@@ -200,11 +200,11 @@ def pagar(soma2):
 
 
 # ===========================================================================================================
-def achar(lanche1):
+def achar(material):
     for lanche in dic:
-        if lanche["cod"] == lanche1:
+        if lanche["cod"] == material:
             return lanche["cod"]#busca o produto dentro do cadastro
-    sg.popup("Não Encontrado",title="Produto",font=("Any", 18))
+    sg.popup("Erro em Produto",title="Erro",font=("Any", 18))
     return
 
 
@@ -264,8 +264,8 @@ def novo_item():
 
 # ===========================================================================================================
 def limpar_saida():
-    lista1.clear()  
-    window['caixa'].update('CAIXA FECHADO')                  
+    carrinho.clear()  
+
     window["com"].update("")
     window["output"].update("")
     window["subtotal"].update("")
@@ -314,43 +314,43 @@ while True:
                 event, values = window.read()
                 if event == 'OK':
                     #verifica se ha valores nos vcampos de produto e quantidade
-                    lanche1 = values['lanche1']
-                    qtd = values["qtd"]
-                    if not lanche1:
-                        sg.Text("Informe valores para continuar",title="Produto",font=("Any", 18))
+                    material = values['lanche1']
+                    qtd = int(values["qtd"])
+                    if not material:
+                        sg.popup("Erro em Produto!",title="Erro",font=("Any", 18))
                         continue
-                    elif not qtd:
-                        sg.Text("Informe valores para continuar",title="Quantidade",font=("Any", 18))
-                        continue
-                    else:
-                        pro = achar(lanche1)
+                    elif qtd > 0 and qtd <100:
+
+
+                        pro = achar(material)
                         #recebe o codigo e integra o produto ao dicionario e lista local
-                        if pro == lanche1:
-                            qtd = int(qtd)
-                            for item in dic:
-                                if item["cod"] == pro:
-                                    num += 1
-                                    ean = item["ean"]
-                                    lanche = item["lanche"]
-                                    preco = item['preco'] * qtd
-                                    soma2 += preco
-                            dicionario = {'Comanda': com, 'Item': num, "Cod": pro, "Ean": ean, 'Lanche': lanche,
-                                          'Quantidade': qtd,
-                                          'Preco': preco}
-                            lista1.append(dicionario.copy())
-                            #escreve os valores na tela de output
-                            for lanche in lista1:
-                                pre = lanche["Preco"]
-                            window['output'].print(
-                                f'       N°{"":<7}{lanche["Item"]}{"":>15}{lanche["Cod"]} - {lanche["Ean"]} - {lanche["Lanche"]:<18}{"":>20} {lanche["Quantidade"]:<18}')
-                            window['output'].print(f'R$ {pre:.2f}'.rjust(140))
-                            window["output"].print(
-                                "      ======================================================================")
-                            window['subtotal'].update(f"R$ {soma2:.2f}")
-                            window["descricao"].update(f" {lanche['Ean']} - {lanche['Lanche']}")
-                            continue
-                        else:
-                            continue
+                        #if pro == material:
+                        qtd = int(qtd)
+                        for item in dic:
+                            if item["cod"] == pro:
+                                num += 1
+                                ean = item["ean"]
+                                lanche = item["lanche"]
+                                preco = item['preco'] * qtd
+                                soma2 += preco
+                        dicionario = {'Comanda': com, 'Item': num, "Cod": pro, "Ean": ean, 'Lanche': lanche,
+                                      'Quantidade': qtd,
+                                      'Preco': preco}
+                        carrinho.append(dicionario.copy())
+                        #escreve os valores na tela de output
+                        for lanche in carrinho:
+                            pre = lanche["Preco"]
+                        window['output'].print(
+                            f'       N°{"":<7}{lanche["Item"]}{"":>15}{lanche["Cod"]} - {lanche["Ean"]} - {lanche["Lanche"]:<18}{"":>20} {lanche["Quantidade"]:<18}')
+                        window['output'].print(f'R$ {pre:.2f}'.rjust(140))
+                        window["output"].print(
+                            "      ======================================================================")
+                        window['subtotal'].update(f"R$ {soma2:.2f}")
+                        window["descricao"].update(f" {lanche['Ean']} - {lanche['Lanche']}")
+                        continue
+
+                    else:
+                        sg.popup("Erro em Quantidade",title="Erro em Quan",font=("Any",18))
                 elif event == 'DELETE':
                     soma2 = remover(soma2)
                     window['subtotal'].update(f"R$ {soma2:.2f}")
@@ -365,15 +365,16 @@ while True:
                     #condição para conciderar o cupom com "pago"
                     soma2 = pagar(soma2)
                     if soma2 ==float(0):
-                        lista_produto.extend(lista1)
+                        lista_produto.extend(carrinho)
                         limpar_saida()
                         num = 0
                         break
                     else:
                         continue
                 elif event == "VOLTAR":#limpa todos os valores e lista local
-                    lista1.clear()
+                    carrinho.clear()
                     limpar_saida()
+
                     soma2 = 0
                     com-=1
                     num = 0
@@ -382,7 +383,7 @@ while True:
                     sg.popup("ENCERRAR",font=("Any",18))
                     break
             except ValueError:#trata erro de valor não numerico
-                sg.popup('Entre com um valor numérico',title="Erro em Quantidade",font=("Any",18))
+                sg.popup('Erro na quantidade',title="Erro em Quantidade",font=("Any",18))
                 continue
     elif event == "Venda Total":
         limpar_saida()
@@ -396,6 +397,7 @@ while True:
             window['output'].print(f'R$ {lanche["preco"]:.2f}'.rjust(140))
             window["output"].print("      ======================================================================")
     elif event == "VOLTAR":
+        window['caixa'].update('CAIXA FECHADO')
         limpar_saida()
         continue
     elif event == "Novo Produto":
