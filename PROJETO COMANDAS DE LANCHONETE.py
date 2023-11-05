@@ -4,7 +4,7 @@ lista_produto = []
 lista1 = []
 com = 0
 dicionario = {}
-with open('comanda.txt', 'r') as adic:#abrir arquivo de nome "comanda.TXT" para leitura atribuido a "adic"
+with open('cardapio.txt', 'r') as adic:#abrir arquivo de nome "comanda.TXT" para leitura atribuido a "adic"
     dic = json.load(adic)#o dicionario "dic" = o aquivo JSON para leitura na variavel "adic"
 
 #                         Inicio da funções
@@ -39,23 +39,28 @@ def entrada_pedido(com):
                 continue
             # encerra o laço e rotorna o valor soma2 a ser pago
             elif lanche1[0] == "P":
+                soma2=soma2
                 print(f"VALOR PAGO R$ {soma2:.2f}".rjust(55))
                 lista_produto.extend(lista1)  # adiciona os novos itens na lista_produto
                 lista1.clear()
                 break
 
             else:
+                num+=1
                 for item in dic:
                     if lanche1 in item["cod"]:
-                        num += 1
-                        soma2 = coleta(lanche1, soma2, com, num)  # envia e rotorna os parametros
-                        continue
+                        soma2+=soma2
+                soma2 = coleta(lanche1, soma2, com, num)  # envia e rotorna os parametros
+               #
+
+                continue
         except ValueError:
             print('Entre com um valor numerico ')
             continue
 
 def coleta(lanche1, soma2, com, num):
     try:
+
         qtd = int(input('Digite a quantidade desejada incluir>>'))
         for item in dic:  # ler e atribui os valores ao dicionario
             if item["cod"] == lanche1:
@@ -78,9 +83,15 @@ def coleta(lanche1, soma2, com, num):
                     print(f'{lanche["Quantidade"]:>5}           R${pre:>6.2f}')
                 print("SubTotal", end="")
                 print(f"R${soma2:.2f}".rjust(47))
-        return soma2  # retorna o valor soma2
+                return soma2  # retorna o valor soma2
+            else:
+                print("Não Encontrado")
+                num-=1
+                return
     except ValueError:
         print('Entre com um valor numerico ')
+        num -= 1
+        return
 
 def remover(soma2):
     try:
