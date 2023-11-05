@@ -148,5 +148,11 @@
         "ean": "7890000000125",
         "lanche": "Leite condensado mo\u00e7a  390g",
         "preco": 8.3
+    },
+    {
+        "cod": "126",
+        "ean": "7890000000126",
+        "lanche": "sfsfs",
+        "preco": 2.34533
     }
 ]
