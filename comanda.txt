@@ -20,7 +20,7 @@
     {
         "cod": "104",
         "ean": "7890000000104",
-        "lanche": "Arroz solito premio polido 5kg",
+        "lanche": "Arroz solito premio poli 5kg",
         "preco": 15.9
     },
     {
@@ -38,7 +38,7 @@
     {
         "cod": "107",
         "ean": "7890000000107",
-        "lanche": "Farinha de mandioca yoki 500g",
+        "lanche": "Farinha de mandioc yoki 500g",
         "preco": 4.9
     },
     {
@@ -74,13 +74,13 @@
     {
         "cod": "113",
         "ean": "7890000000113",
-        "lanche": "Coco ralado ducoco ado 100g",
+        "lanche": "Coco ralado dudodo ado 100g",
         "preco": 3.9
     },
     {
         "cod": "114",
         "ean": "7890000000114",
-        "lanche": "Molho de tomate quero  340g",
+        "lanche": "Molho de tomate quero -340g",
         "preco": 2.9
     },
     {
@@ -98,61 +98,13 @@
     {
         "cod": "117",
         "ean": "7890000000117",
-        "lanche": "Refrigerante coca-cola 2250ml",
+        "lanche": "Refrigerante coca-cola 2+250lt",
         "preco": 8.9
     },
     {
         "cod": "118",
         "ean": "7890000000118",
-        "lanche": "Refresco tang de laranja 35g",
+        "lanche": "Refresco tang de laranja 35g-",
         "preco": 1.28
-    },
-    {
-        "cod": "119",
-        "ean": "7890000000119",
-        "lanche": "Farofa temperada yoki pct 500g",
-        "preco": 5.9
-    },
-    {
-        "cod": "120",
-        "ean": "7890000000120",
-        "lanche": "Carne seca traseiro pc 500g",
-        "preco": 30.0
-    },
-    {
-        "cod": "121",
-        "ean": "7890000000121",
-        "lanche": "macarrao instataneo nissin 500",
-        "preco": 3.0
-    },
-    {
-        "cod": "122",
-        "ean": "7890000000122",
-        "lanche": "milharina",
-        "preco": 3.9
-    },
-    {
-        "cod": "123",
-        "ean": "7890000000123",
-        "lanche": "salshicha",
-        "preco": 2.9
-    },
-    {
-        "cod": "124",
-        "ean": "7890000000124",
-        "lanche": "agua mineral bonafot",
-        "preco": 10.3
-    },
-    {
-        "cod": "125",
-        "ean": "7890000000125",
-        "lanche": "Leite condensado mo\u00e7a  390g",
-        "preco": 8.3
-    },
-    {
-        "cod": "126",
-        "ean": "7890000000126",
-        "lanche": "sfsfs",
-        "preco": 2.34533
     }
 ]

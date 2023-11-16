@@ -25,7 +25,11 @@ def senha():
         else:
             sg.popup("Senha incorreta")
             x += 1
-            continue
+            if x >3:
+                sg.popup("Voce escedeu as tres tentativas")
+                break
+            else:
+                continue
 def saque():
     while True:
         try:
@@ -51,11 +55,11 @@ def saque():
 
 def rest(titular):
     rest=lista1[3]
-    sg.Text(rest)
+    sg.popup(rest)
     for cliente in banco_dados:
         if cliente["nome"]==titular:
             cliente.update({"saldo":rest})
-            sg.Text(f"{cliente['saldo']}")
+            sg.popup(f"{cliente['saldo']}")
     lista1.clear()
 
 def extrato():
@@ -68,9 +72,9 @@ def extrato():
 
     window = sg.Window("EXTRATO",layout,finalize=True)
     for saque in lista_saque:
-        window["box"].print(*lista_saque)
+        #window["box"].print(*lista_saque)
         window["box"].print(*lista1)
-        window["box"].print(*banco_dados)
+       #window["box"].print(*banco_dados)
     # for lanche in dic:
     #     layout.append([sg.Text(lanche['cod'], size=(30, 1)), sg.Text(lanche['lanche'], size=(30, 1)),
     #                    sg.Text(f'R$ {lanche["preco"]:.2f}', size=(7, 1))])
@@ -93,7 +97,7 @@ layout = [
     [sg.Button('EXTRATO', size=(37, 1))],
     [sg.Button('DEPOSITO', size=(37, 1))],
     [sg.Button('SAIR', size=(8, 1))],
-    [sg.Text(size=(25,1),key='valores',font=("Any", 15))],
+   # [sg.Text(size=(25,1),key='valores',font=("Any", 15))],
     #[sg.Image("morto de fome.png", size=(300, 80))],
 ]
 
@@ -136,22 +140,33 @@ while True:
 
         elif event == "SALDO":
             #window['box'].update("")
-            window['box'].print(f"SALDO EM CONTA CORRENTE ")
+            window['box'].print(f"SALDO EM CONTA CORRENTE ".center(45))
             resposta = senha()
             if resposta== True:
-                window['box'].print(f"SEU SALDO É R$ {lista1[3]:.2f}".rjust(20))
+                window['box'].print(f"R$ {lista1[3]:.2f}")
+                window['box'].print(f"-----------------------------------------------------------------------")
 
         elif event == "SAQUE":
             #window['box'].update("")
-            window['box'].update(f"SAQUE EM CONTA CORRENTE ")
+            window['box'].update(f"SAQUE EM CONTA CORRENTE ".center(45))
             resposta = saque()
-            window['box'].print(f" Irforme o valor R$ {resposta:.2f} ")
-            window['box'].print(f" AUTORIZADO R$ {resposta:.2f} ")
+            #window['box'].print(f" Irforme o valor R$ {resposta:.2f} ")
+            window['box'].print(f"R$ {resposta:.2f}")
+            window['box'].print(f"-----------------------------------------------------------------------")
 
         elif event == "EXTRATO":
-            window['output'].update(f"EXTRATO EM CONTA CORRENTE ")
-            resposta = extrato()
-
+            
+            window['box'].update(f"EXTRATO EM CONTA CORRENTE ".center(45))
+            numero_saque = len(lista1)
+    
+            for numero in range(numero_saque):
+                saque = lista1[numero]
+                # Agora você pode fazer algo com 'saque' ou imprimi-lo na janela 'box'
+                window["box"].print(saque)
+            #numero_saque=len(lista1)
+            #for nemero_saque(len[lista_saque[numero_saque]+1])
+               # window["box"].print()   
+            continue
         elif event == "DEPOSITO":
             resposta = senha()
             window['output'].update(f"DEPOSITO EM CONTA CORRENTE ")
